@@ -10,10 +10,9 @@
  * Usage:  node streamer.js
  */
 
-import { PrismaClient } from "./generated/prisma/client.js";
-import { PrismaPg } from "@prisma/adapter-pg";
-
 import { config } from "./config.js";
+import { prisma } from "./lib/prisma.js";
+import { KEYWORDS } from "./lib/keywords.js";
 
 // ─── Subreddits to watch ─────────────────────────────────────────────────────
 // Each gets its own JSON feed polled on a staggered schedule.
@@ -37,76 +36,6 @@ const POLL_INTERVAL_MS = 5 * 60_000;
 const RATE_LIMIT_BACKOFF_MS = 2 * 60_000;
 
 // ─── Keyword Scoring ─────────────────────────────────────────────────────────
-
-const KEYWORDS = [
-  // Free signals
-  ["free", 10],
-  ["$0", 10],
-  ["no charge", 8],
-  ["give away", 8],
-  ["giveaway", 8],
-  ["take it all", 7],
-  ["take them all", 7],
-  ["just pay shipping", 6],
-
-  // Low cost signals
-  ["obo", 4],
-  ["or best offer", 4],
-  ["cheap", 3],
-  ["clearing out", 5],
-  ["downsizing", 5],
-  ["estate", 5],
-  ["inherited", 5],
-
-  // Volume signals
-  ["lot", 4],
-  ["longbox", 6],
-  ["long box", 6],
-  ["collection", 4],
-  ["bundle", 3],
-  ["bulk", 4],
-  ["box", 3],
-  ["run", 3],
-
-  // High-value publishers / titles
-  ["marvel", 3],
-  ["dc comics", 3],
-  ["image", 2],
-  ["dark horse", 2],
-  ["tmnt", 5],
-  ["teenage mutant", 4],
-  ["x-men", 4],
-  ["spider-man", 4],
-  ["batman", 4],
-  ["spawn", 4],
-  ["wolverine", 3],
-  ["venom", 3],
-
-  // Graded / slabbed
-  ["cgc", 8],
-  ["graded", 7],
-  ["slabbed", 7],
-  ["psa", 7],
-  ["bgs", 6],
-  ["sgc", 6],
-
-  // Collectibles misc
-  ["funko", 3],
-  ["action figure", 3],
-  ["statue", 3],
-  ["variant", 3],
-  ["first appearance", 5],
-  ["first print", 5],
-  ["key issue", 5],
-  ["silver age", 6],
-  ["bronze age", 5],
-  ["golden age", 7],
-
-  ["indy", 7],
-  ["fantagraphics", 3],
-  ["drawn & quarterly", 3],
-  ["love and rockets", 3],
-];
 
 function scorePost(title = "", body = "") {
   const text = `${title} ${body}`.toLowerCase();
@@ -191,10 +120,6 @@ async function fetchPosts(subreddit) {
 }
 
 // ─── Database (Prisma → Neon Postgres) ───────────────────────────────────────
-
-const prisma = new PrismaClient({
-  adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
-});
 
 async function alreadySeen(postId) {
   const existing = await prisma.alert.findUnique({ where: { postId } });

@@ -3,3 +3,4 @@ config.js
 /generated/prisma
 .env
 seen_posts.db
+dashboard/dist
