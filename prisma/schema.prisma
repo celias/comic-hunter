@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Alert {
+  id              Int      @id @default(autoincrement())
+  postId          String   @unique
+  subreddit       String
+  title           String
+  body            String
+  url             String
+  author          String
+  score           Int
+  matched         String[] // content keywords
+  isLocal         Boolean
+  matchedLocation String[] // location keywords or ["r/phillycollectors"]
+  postedAt        DateTime
+  seenAt          DateTime @default(now())
+
+  // eBay flip fields — nullable, populated async once API key arrives
+  flipMinSold     Float?
+  flipMaxSold     Float?
+  flipMinListed   Float?
+  flipMaxListed   Float?
+  flipSearchTerm  String?
+}
