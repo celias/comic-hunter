@@ -1,9 +1,9 @@
 /**
- * server.js
- * ---------
+ * api-server.js
+ * -------------
  * Express API — serves Comic Hunter alerts to the React dashboard.
  *
- * Usage:  npx tsx server.js
+ * Usage:  npx tsx api-server.js
  *         npm run server
  *
  * Endpoints:
@@ -18,7 +18,7 @@ import express from "express";
 import cors from "cors";
 import { prisma } from "./lib/prisma.js";
 import { KEYWORDS } from "./lib/keywords.js";
-import { config } from "./config.js";
+import { config } from "./lib/config.js";
 
 const PORT = process.env.PORT ?? 3001;
 

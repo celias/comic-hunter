@@ -1,16 +1,16 @@
 /**
- * streamer.js
- * -----------
+ * reddit-poller.js
+ * ----------------
  * Polls Reddit JSON feeds for free/cheap comics & collectibles.
  * No API key or Reddit account required.
  *
  * Scores posts by keyword, deduplicates with Postgres via Prisma,
  * and fires Discord webhook alerts for anything worth flipping.
  *
- * Usage:  node streamer.js
+ * Usage:  npx tsx reddit-poller.js
  */
 
-import { config } from "./config.js";
+import { config } from "./lib/config.js";
 import { prisma } from "./lib/prisma.js";
 import { KEYWORDS } from "./lib/keywords.js";
 

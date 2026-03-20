@@ -8,7 +8,7 @@
  * Usage:  node test-discord.js
  */
 
-import { config } from "./config.js";
+import { config } from "./lib/config.js";
 
 async function sendTestEmbed(label, isLocal, matchedLocation) {
   const locationLabel = isLocal

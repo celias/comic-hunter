@@ -1,4 +1,4 @@
-# Comic Hunter — Reddit Streamer (Node.js)
+# Comic Hunter — Reddit Poller (Node.js)
 
 Polls Reddit JSON feeds for free/cheap comics and collectibles.
 No Reddit account or API key needed — uses Reddit's public JSON endpoint.
@@ -12,6 +12,7 @@ Scores posts by keyword and location, saves to Postgres, and fires Discord webho
 
 ```bash
 npm install
+cd dashboard && npm install && cd ..
 ```
 
 ### 2. Configure environment
@@ -33,7 +34,7 @@ DISCORD_WEBHOOK_URL=your_discord_webhook_url
 
 ### 3. Run
 
-Two separate processes — start both:
+Three separate processes — start all three:
 
 ```bash
 # Terminal 1 — Reddit poller
@@ -41,6 +42,9 @@ npm start
 
 # Terminal 2 — API server (port 3001)
 npm run server
+
+# Terminal 3 — Dashboard (Vite dev server on port 5173)
+npm run dashboard
 ```
 
 Verify the API is up:
@@ -76,7 +80,7 @@ The Express server exposes three endpoints:
 
 ## Tuning signal-to-noise
 
-Edit `SCORE_THRESHOLD` in `config.js`:
+Edit `SCORE_THRESHOLD` in `lib/config.js`:
 
 | Threshold | What you get            |
 | --------- | ----------------------- |
@@ -85,13 +89,13 @@ Edit `SCORE_THRESHOLD` in `config.js`:
 | `15`      | Only strong matches     |
 | `20+`     | Quiet — only clear wins |
 
-To add content keywords, edit the `KEYWORDS` array in `streamer.js`:
+To add content keywords, edit the `KEYWORDS` array in `lib/keywords.js`:
 
 ```js
 ["your keyword", pointValue],
 ```
 
-To add location keywords (South/Central NJ area), edit `LOCATION_KEYWORDS` in `config.js`.
+To add location keywords (South/Central NJ area), edit `LOCATION_KEYWORDS` in `lib/config.js`.
 
 ---
 
@@ -113,8 +117,8 @@ npm run server
 
 ```bash
 npm install -g pm2
-pm2 start streamer.js --name comic-hunter-poller
-pm2 start server.js --name comic-hunter-api
+pm2 start reddit-poller.js --name comic-hunter-poller
+pm2 start api-server.js --name comic-hunter-api
 pm2 save
 pm2 startup
 ```
@@ -123,8 +127,7 @@ pm2 startup
 
 ## What's next
 
-- React dashboard — live alert feed, local filter, seen/dismiss
 - AWS Cognito auth — per-user settings and seen state
-- eBay flip value (`ebay.js`) — price lookup on local posts once API key arrives
-- Facebook Marketplace (`fb-marketplace.js`) — Playwright scraper, geo-targeted listings
-- Buy Nothing (`buy-nothing.js`) — Facebook Buy Nothing group scraper (same session as Marketplace)
+- eBay flip value — price lookup on local posts once API key arrives
+- Facebook Marketplace — Playwright scraper, geo-targeted listings
+- Buy Nothing — Facebook Buy Nothing group scraper (same session as Marketplace)

@@ -15,7 +15,7 @@ A Node.js app that polls Reddit for free/cheap comics and collectibles, scores p
 | Database (dev)  | Neon (cloud Postgres)               |
 | Database (prod) | AWS RDS                             |
 | ORM             | Prisma v7 + `@prisma/adapter-pg`    |
-| Frontend        | React 19 + Vite 6 + Tailwind v4    |
+| Frontend        | React 19 + Vite 6 + Tailwind v4     |
 | Backend         | Express.js → EC2/ECS                |
 | Auth            | AWS Cognito                         |
 | Real-time       | REST polling (5s)                   |
@@ -25,12 +25,11 @@ A Node.js app that polls Reddit for free/cheap comics and collectibles, scores p
 ## File Structure
 
 ```
-streamer.js          — Reddit poller, scorer, Discord alerter, Prisma writes
-server.js            — Express API (port 3001), serves alerts + keywords to the dashboard
-config.js            — GEO_SUBS, LOCATION_KEYWORDS (40+ weighted), SCORE_THRESHOLD, DISCORD_WEBHOOK_URL
-lib/prisma.js        — Shared Prisma client singleton (imported by streamer + server)
-lib/keywords.js      — Shared content keyword weights (imported by streamer + server)
-ebay.js              — eBay flip value lookup (placeholder — blocked on API key)
+reddit-poller.js     — Reddit poller, scorer, Discord alerter, Prisma writes
+api-server.js        — Express API (port 3001), serves alerts + keywords to the dashboard
+lib/config.js        — GEO_SUBS, LOCATION_KEYWORDS (40+ weighted), SCORE_THRESHOLD, DISCORD_WEBHOOK_URL
+lib/prisma.js        — Shared Prisma client singleton (imported by poller + server)
+lib/keywords.js      — Shared content keyword weights (imported by poller + server)
 test-discord.js      — Webhook smoke test utility
 prisma/schema.prisma — Alert model (pushed to Neon); User/UserSettings/UserSeenAlert planned
 prisma.config.ts     — Prisma v7 config, reads DATABASE_URL from .env
@@ -70,7 +69,7 @@ const prisma = new PrismaClient({
 });
 ```
 
-Shared via `lib/prisma.js` — both `streamer.js` and `server.js` import from there.
+Shared via `lib/prisma.js` — both `reddit-poller.js` and `api-server.js` import from there.
 
 ---
 
@@ -120,16 +119,16 @@ model UserSeenAlert {
 
 ---
 
-## Express API — `server.js`
+## Express API — `api-server.js`
 
-Runs as a separate process from the streamer on port 3001 (or `PORT` env var).
+Runs as a separate process from the poller on port 3001 (or `PORT` env var).
 
-| Method | Path              | Description                                           |
-| ------ | ----------------- | ----------------------------------------------------- |
-| GET    | `/api/health`     | `{ status: "ok", timestamp }`                         |
-| GET    | `/api/alerts`     | Paginated alert list with filters                     |
-| GET    | `/api/alerts/:id` | Single alert by DB id                                 |
-| GET    | `/api/keywords`   | Content + location keyword weight maps for dashboard  |
+| Method | Path              | Description                                          |
+| ------ | ----------------- | ---------------------------------------------------- |
+| GET    | `/api/health`     | `{ status: "ok", timestamp }`                        |
+| GET    | `/api/alerts`     | Paginated alert list with filters                    |
+| GET    | `/api/alerts/:id` | Single alert by DB id                                |
+| GET    | `/api/keywords`   | Content + location keyword weight maps for dashboard |
 
 **Query params for `GET /api/alerts`:**
 
@@ -183,14 +182,15 @@ React 19 + Vite 6 + Tailwind CSS v4 single-page app. Lives in its own directory 
 ### `lib/keywords.js`
 
 Content keyword weights as `[keyword, points]` tuples. Imported by:
-- `streamer.js` — for scoring posts
-- `server.js` — for the `GET /api/keywords` endpoint
 
-Location keyword weights remain in `config.js` (which also holds `GEO_SUBS`, `SCORE_THRESHOLD`, `DISCORD_WEBHOOK_URL`).
+- `reddit-poller.js` — for scoring posts
+- `api-server.js` — for the `GET /api/keywords` endpoint
+
+Location keyword weights live in `lib/config.js` (which also holds `GEO_SUBS`, `SCORE_THRESHOLD`, `DISCORD_WEBHOOK_URL`).
 
 ---
 
-## eBay Flip Value — `ebay.js`
+## eBay Flip Value
 
 Designed, not yet built. Blocked on eBay developer API key.
 
@@ -249,15 +249,16 @@ model Alert {
 ## Build Order
 
 - [x] Prisma schema + push to Neon
-- [x] `streamer.js` → Postgres via Prisma — confirmed working
+- [x] `reddit-poller.js` → Postgres via Prisma — confirmed working
 - [x] `lib/prisma.js` — shared client singleton
 - [x] `lib/keywords.js` — shared content keyword weights
-- [x] `server.js` — Express API (`/api/alerts`, `/api/alerts/:id`, `/api/health`, `/api/keywords`)
+- [x] `lib/config.js` — tracked app config (location keywords, scoring, geo subs)
+- [x] `api-server.js` — Express API (`/api/alerts`, `/api/alerts/:id`, `/api/health`, `/api/keywords`)
 - [x] React dashboard — live feed, filters, keyword weight emphasis
 - [ ] `User` / `UserSettings` / `UserSeenAlert` schema + migration
 - [ ] Auth — AWS Cognito integration (frontend + API middleware)
 - [ ] Seen/dismiss feature in dashboard (requires auth)
-- [ ] `ebay.js` — eBay flip value lookup (once API key arrives)
+- [ ] eBay flip value lookup (once API key arrives)
 - [ ] Deploy — EC2/ECS (backend), S3 + CloudFront (frontend), RDS (Postgres)
 - [ ] `Alert.source` field + `postId` namespacing migration (prerequisite for multi-source)
 - [ ] `fb-marketplace.js` — Playwright scraper for Facebook Marketplace
@@ -284,8 +285,6 @@ Verify API: `curl http://localhost:3001/api/health`
 
 ## Notes
 
-- `viewer.js` — orphaned CLI script from old SQLite architecture, safe to delete
-- `sql.js` in `package.json` — leftover from same SQLite era, can be removed with `viewer.js`
 - Node engine warnings from Prisma 7.5 (`^22.12` required) — resolve by running with nvm Node v20.20.1 as set
 - Dashboard uses Vite 6 (not 8) for Node v20 compatibility
-- The streamer saves ALL posts to the database regardless of score; the dashboard defaults minScore to 10 to filter noise
+- The poller saves ALL posts to the database regardless of score; the dashboard defaults minScore to 10 to filter noise

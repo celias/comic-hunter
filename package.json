@@ -3,11 +3,8 @@
   "version": "1.0.0",
   "description": "Polls Reddit RSS feeds for free/cheap comics and collectibles, alerts via Discord.",
   "scripts": {
-    "start": "npx tsx streamer.js",
-    "server": "npx tsx server.js",
-    "view": "node viewer.js",
-    "view:all": "node viewer.js --all",
-    "view:hot": "node viewer.js --min 20",
+    "start": "npx tsx reddit-poller.js",
+    "server": "npx tsx api-server.js",
     "dashboard": "cd dashboard && npm run dev",
     "dashboard:build": "cd dashboard && npm run build"
   },
@@ -22,8 +19,7 @@
     "dotenv": "^17.3.1",
     "express": "^4.21.2",
     "pg": "^8.20.0",
-    "prisma": "^7.5.0",
-    "sql.js": "^1.14.1"
+    "prisma": "^7.5.0"
   },
   "devDependencies": {
     "tsx": "^4.21.0"
