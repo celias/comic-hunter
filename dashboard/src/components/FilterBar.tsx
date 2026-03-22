@@ -1,3 +1,5 @@
+import type { Filters } from "../types.ts";
+
 const SUBREDDITS = [
   "comicswap",
   "comicbooks",
@@ -8,8 +10,14 @@ const SUBREDDITS = [
   "comicbookcollecting",
 ];
 
-export default function FilterBar({ filters, onChange }) {
-  const update = (key, value) => onChange({ ...filters, [key]: value });
+interface FilterBarProps {
+  filters: Filters;
+  onChange: (filters: Filters) => void;
+}
+
+export default function FilterBar({ filters, onChange }: FilterBarProps) {
+  const update = (key: keyof Filters, value: Filters[keyof Filters]): void =>
+    onChange({ ...filters, [key]: value });
 
   return (
     <div className="flex flex-wrap items-end gap-4 mb-6 p-4 bg-gray-900 rounded-lg border border-gray-800">

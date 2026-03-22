@@ -1,16 +1,22 @@
-import ScoreBadge from "./ScoreBadge.jsx";
+import ScoreBadge from "./ScoreBadge.tsx";
+import type { SerializedAlert, WeightsMap } from "../types.ts";
 
-function formatDate(dateStr) {
+function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleString();
 }
 
-function weightStyle(weight) {
+function weightStyle(weight: number): string {
   if (weight >= 8) return "bg-red-900/60 text-red-200 border-red-700 font-semibold";
   if (weight >= 5) return "bg-yellow-900/40 text-yellow-200 border-yellow-700";
   return "bg-gray-800 text-gray-300 border-gray-700";
 }
 
-export default function AlertDetail({ alert, weights }) {
+interface AlertDetailProps {
+  alert: SerializedAlert;
+  weights: WeightsMap | null;
+}
+
+export default function AlertDetail({ alert, weights }: AlertDetailProps) {
   const sortedMatched = [...alert.matched].sort((a, b) => {
     const wa = weights?.[a] ?? 0;
     const wb = weights?.[b] ?? 0;

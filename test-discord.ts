@@ -8,9 +8,9 @@
  * Usage:  node test-discord.js
  */
 
-import { config } from "./lib/config.js";
+import { config } from "./lib/config.ts";
 
-async function sendTestEmbed(label, isLocal, matchedLocation) {
+async function sendTestEmbed(label: string, isLocal: boolean, matchedLocation: string[]): Promise<void> {
   const locationLabel = isLocal
     ? `📍 South/Central NJ  •  ${matchedLocation.join(", ")}`
     : "🌐 Location unknown";
@@ -41,7 +41,7 @@ async function sendTestEmbed(label, isLocal, matchedLocation) {
     ],
   };
 
-  const res = await fetch(config.DISCORD_WEBHOOK_URL, {
+  const res = await fetch(config.DISCORD_WEBHOOK_URL!, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),

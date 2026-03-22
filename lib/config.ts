@@ -1,6 +1,14 @@
 import "dotenv/config";
 
-export const config = {
+interface Config {
+  USER_AGENT: string;
+  DISCORD_WEBHOOK_URL: string | undefined;
+  SCORE_THRESHOLD: number;
+  GEO_SUBS: string[];
+  LOCATION_KEYWORDS: [string, number][];
+}
+
+export const config: Config = {
   // ── User Agent ────────────────────────────────────────────────────────────
   // Reddit asks that RSS bots identify themselves. Use any descriptive string.
   USER_AGENT: "comic-hunter-rss-bot/1.0",

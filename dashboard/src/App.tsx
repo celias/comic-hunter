@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
-import { useAlerts } from "./hooks/useAlerts.js";
-import { fetchKeywords } from "./api.js";
-import Header from "./components/Header.jsx";
-import FilterBar from "./components/FilterBar.jsx";
-import AlertList from "./components/AlertList.jsx";
-import EmptyState from "./components/EmptyState.jsx";
+import { useAlerts } from "./hooks/useAlerts.ts";
+import { fetchKeywords } from "./api.ts";
+import Header from "./components/Header.tsx";
+import FilterBar from "./components/FilterBar.tsx";
+import AlertList from "./components/AlertList.tsx";
+import EmptyState from "./components/EmptyState.tsx";
+import type { Filters, WeightsMap } from "./types.ts";
 
-const INITIAL_FILTERS = {
+const INITIAL_FILTERS: Filters = {
   minScore: 10,
   localOnly: false,
   subreddit: "",
 };
 
 export default function App() {
-  const [filters, setFilters] = useState(INITIAL_FILTERS);
+  const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS);
   const { alerts, loading, error, connected } = useAlerts(filters);
-  const [weights, setWeights] = useState(null);
+  const [weights, setWeights] = useState<WeightsMap | null>(null);
 
   useEffect(() => {
     fetchKeywords()

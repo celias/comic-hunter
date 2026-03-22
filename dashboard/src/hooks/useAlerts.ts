@@ -1,19 +1,20 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { fetchAlerts } from "../api.js";
+import { fetchAlerts } from "../api.ts";
+import type { Filters, SerializedAlert } from "../types.ts";
 
 const POLL_INTERVAL = 5000;
 
-export function useAlerts(filters) {
-  const [alerts, setAlerts] = useState([]);
+export function useAlerts(filters: Filters) {
+  const [alerts, setAlerts] = useState<SerializedAlert[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
-  const latestSeenAt = useRef(null);
-  const intervalRef = useRef(null);
+  const latestSeenAt = useRef<string | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const buildParams = useCallback(
-    (since) => {
-      const params = { limit: 100 };
+    (since: string | null) => {
+      const params: Record<string, string | number> = { limit: 100 };
       if (filters.minScore > 0) params.minScore = filters.minScore;
       if (filters.localOnly) params.localOnly = "true";
       if (filters.subreddit) params.subreddit = filters.subreddit;
@@ -33,8 +34,8 @@ export function useAlerts(filters) {
       if (data.alerts.length > 0) {
         latestSeenAt.current = data.alerts[0].seenAt;
       }
-    } catch (err) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
       setConnected(false);
     } finally {
       setLoading(false);
@@ -65,7 +66,7 @@ export function useAlerts(filters) {
 
   useEffect(() => {
     intervalRef.current = setInterval(pollNew, POLL_INTERVAL);
-    return () => clearInterval(intervalRef.current);
+    return () => clearInterval(intervalRef.current!);
   }, [pollNew]);
 
   return { alerts, loading, error, connected };

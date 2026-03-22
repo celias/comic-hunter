@@ -1,4 +1,9 @@
-export default function Header({ connected, alertCount }) {
+interface HeaderProps {
+  connected: boolean;
+  alertCount: number;
+}
+
+export default function Header({ connected, alertCount }: HeaderProps) {
   return (
     <header className="flex items-center justify-between mb-6">
       <div className="flex items-center gap-3">

@@ -10,9 +10,9 @@
  * Usage:  npx tsx reddit-poller.js
  */
 
-import { config } from "./lib/config.js";
-import { prisma } from "./lib/prisma.js";
-import { KEYWORDS } from "./lib/keywords.js";
+import { config } from "./lib/config.ts";
+import { prisma } from "./lib/prisma.ts";
+import { KEYWORDS } from "./lib/keywords.ts";
 
 // ─── Subreddits to watch ─────────────────────────────────────────────────────
 // Each gets its own JSON feed polled on a staggered schedule.
@@ -37,10 +37,20 @@ const RATE_LIMIT_BACKOFF_MS = 2 * 60_000;
 
 // ─── Keyword Scoring ─────────────────────────────────────────────────────────
 
-function scorePost(title = "", body = "") {
+interface RedditPost {
+  id: string;
+  title: string;
+  body: string;
+  url: string;
+  author: string;
+  createdAt: string;
+  subreddit: string;
+}
+
+function scorePost(title = "", body = ""): { score: number; matched: string[] } {
   const text = `${title} ${body}`.toLowerCase();
   let score = 0;
-  const matched = [];
+  const matched: string[] = [];
   for (const [kw, pts] of KEYWORDS) {
     if (text.includes(kw)) {
       score += pts;
@@ -59,7 +69,7 @@ function scorePost(title = "", body = "") {
 //   isLocal         — true if ANY location keyword matched
 //   matchedLocation — array of matched location keywords (for the Discord embed)
 
-function scoreLocation(subreddit, title = "", body = "") {
+function scoreLocation(subreddit: string, title = "", body = ""): { locationScore: number; isLocal: boolean; matchedLocation: string[] } {
   // Geo-targeted subs are always considered local — skip keyword scan.
   if (config.GEO_SUBS.includes(subreddit)) {
     return {
@@ -71,7 +81,7 @@ function scoreLocation(subreddit, title = "", body = "") {
 
   const text = `${title} ${body}`.toLowerCase();
   let locationScore = 0;
-  const matchedLocation = [];
+  const matchedLocation: string[] = [];
 
   for (const [kw, pts] of config.LOCATION_KEYWORDS) {
     if (text.includes(kw)) {
@@ -93,7 +103,7 @@ function scoreLocation(subreddit, title = "", body = "") {
  */
 class RateLimitError extends Error {}
 
-async function fetchPosts(subreddit) {
+async function fetchPosts(subreddit: string): Promise<RedditPost[]> {
   const url = `https://www.reddit.com/r/${subreddit}/new.json?limit=25`;
   const res = await fetch(url, {
     headers: {
@@ -105,7 +115,7 @@ async function fetchPosts(subreddit) {
   if (res.status === 429) throw new RateLimitError("Rate limited");
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-  const json = await res.json();
+  const json: any = await res.json();
   const posts = json?.data?.children ?? [];
 
   return posts.map(({ data }) => ({
@@ -121,12 +131,12 @@ async function fetchPosts(subreddit) {
 
 // ─── Database (Prisma → Neon Postgres) ───────────────────────────────────────
 
-async function alreadySeen(postId) {
+async function alreadySeen(postId: string): Promise<boolean> {
   const existing = await prisma.alert.findUnique({ where: { postId } });
   return existing !== null;
 }
 
-async function saveAlert(post, score, matched, isLocal, matchedLocation) {
+async function saveAlert(post: RedditPost, score: number, matched: string[], isLocal: boolean, matchedLocation: string[]): Promise<void> {
   await prisma.alert.create({
     data: {
       postId: post.id,
@@ -152,7 +162,7 @@ const COLORS = {
   high: 0xed4245, // red    — score 30+
 };
 
-function scoreColor(score) {
+function scoreColor(score: number): number {
   if (score >= 30) return COLORS.high;
   if (score >= 20) return COLORS.medium;
   return COLORS.low;
@@ -161,12 +171,12 @@ function scoreColor(score) {
 // isLocal    — did location scoring fire?
 // matchedLocation — which location keywords matched (or ["r/phillycollectors"] etc.)
 async function sendDiscordAlert(
-  post,
-  score,
-  matched,
-  isLocal,
-  matchedLocation,
-) {
+  post: RedditPost,
+  score: number,
+  matched: string[],
+  isLocal: boolean,
+  matchedLocation: string[],
+): Promise<void> {
   const preview = post.body.slice(0, 300);
   const truncated = post.body.length > 300 ? "…" : "";
 
@@ -204,7 +214,7 @@ async function sendDiscordAlert(
     ],
   };
 
-  const res = await fetch(config.DISCORD_WEBHOOK_URL, {
+  const res = await fetch(config.DISCORD_WEBHOOK_URL!, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -215,18 +225,18 @@ async function sendDiscordAlert(
 
 // ─── Logging ──────────────────────────────────────────────────────────────────
 
-function log(level, msg) {
+function log(level: string, msg: string): void {
   const ts = new Date().toISOString().replace("T", " ").slice(0, 19);
   console.log(`${ts} [${level.toUpperCase().padEnd(5)}] ${msg}`);
 }
 
 // ─── Per-subreddit Poll Loop ──────────────────────────────────────────────────
 
-async function pollSubreddit(subreddit, seenOnStartup) {
-  let posts;
+async function pollSubreddit(subreddit: string, seenOnStartup: Set<string>): Promise<void> {
+  let posts: RedditPost[];
   try {
     posts = await fetchPosts(subreddit);
-  } catch (err) {
+  } catch (err: unknown) {
     if (err instanceof RateLimitError) {
       log(
         "warn",
@@ -235,7 +245,7 @@ async function pollSubreddit(subreddit, seenOnStartup) {
       await new Promise((r) => setTimeout(r, RATE_LIMIT_BACKOFF_MS));
       return;
     }
-    log("error", `r/${subreddit} fetch error: ${err.message}`);
+    log("error", `r/${subreddit} fetch error: ${err instanceof Error ? err.message : String(err)}`);
     return;
   }
 
@@ -264,8 +274,8 @@ async function pollSubreddit(subreddit, seenOnStartup) {
       }
       try {
         await sendDiscordAlert(post, score, matched, isLocal, matchedLocation);
-      } catch (err) {
-        log("error", `Discord failed: ${err.message}`);
+      } catch (err: unknown) {
+        log("error", `Discord failed: ${err instanceof Error ? err.message : String(err)}`);
       }
     } else {
       log(
@@ -283,15 +293,15 @@ async function pollSubreddit(subreddit, seenOnStartup) {
 async function main() {
   // Seed existing post IDs so the first run doesn't flood Discord
   log("info", "Seeding initial post IDs (skipping existing posts)…");
-  const seenOnStartup = new Set();
+  const seenOnStartup = new Set<string>();
 
   for (const subreddit of SUBREDDITS) {
     try {
       const posts = await fetchPosts(subreddit);
       posts.forEach((p) => seenOnStartup.add(p.id));
       log("info", `  r/${subreddit} — seeded ${posts.length} posts`);
-    } catch (err) {
-      log("warn", `  r/${subreddit} — seed failed: ${err.message}`);
+    } catch (err: unknown) {
+      log("warn", `  r/${subreddit} — seed failed: ${err instanceof Error ? err.message : String(err)}`);
     }
     await new Promise((r) => setTimeout(r, 2_000)); // 2s between seed fetches
   }

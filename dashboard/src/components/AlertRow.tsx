@@ -1,6 +1,7 @@
-import ScoreBadge from "./ScoreBadge.jsx";
+import ScoreBadge from "./ScoreBadge.tsx";
+import type { SerializedAlert } from "../types.ts";
 
-function timeAgo(dateStr) {
+function timeAgo(dateStr: string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
   if (seconds < 60) return "just now";
   const minutes = Math.floor(seconds / 60);
@@ -11,7 +12,13 @@ function timeAgo(dateStr) {
   return `${days}d ago`;
 }
 
-export default function AlertRow({ alert, isExpanded, onToggle }) {
+interface AlertRowProps {
+  alert: SerializedAlert;
+  isExpanded: boolean;
+  onToggle: () => void;
+}
+
+export default function AlertRow({ alert, isExpanded, onToggle }: AlertRowProps) {
   return (
     <div
       className={`border rounded-lg transition-colors ${

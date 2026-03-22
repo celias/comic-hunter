@@ -1,7 +1,7 @@
 // Content keyword weights — shared between reddit-poller.js and api-server.js
 // Each entry: [keyword, points]
 
-export const KEYWORDS = [
+export const KEYWORDS: [string, number][] = [
   // Free signals
   ["free", 10],
   ["$0", 10],

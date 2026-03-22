@@ -16,9 +16,9 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import { prisma } from "./lib/prisma.js";
-import { KEYWORDS } from "./lib/keywords.js";
-import { config } from "./lib/config.js";
+import { prisma } from "./lib/prisma.ts";
+import { KEYWORDS } from "./lib/keywords.ts";
+import { config } from "./lib/config.ts";
 
 const PORT = process.env.PORT ?? 3001;
 
@@ -36,7 +36,7 @@ app.use(express.json());
 
 // ─── Logging helper ───────────────────────────────────────────────────────────
 
-function log(level, msg) {
+function log(level: string, msg: string): void {
   const ts = new Date().toISOString().replace("T", " ").slice(0, 19);
   console.log(`${ts} [${level.toUpperCase().padEnd(5)}] ${msg}`);
 }
@@ -59,12 +59,12 @@ app.get("/api/health", (_req, res) => {
 //   since      — ISO timestamp; only alerts with seenAt > since (for live polling)
 app.get("/api/alerts", async (req, res) => {
   try {
-    const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
-    const minScore = parseInt(req.query.minScore) || 0;
+    const page = Math.max(1, parseInt(req.query.page as string) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 20));
+    const minScore = parseInt(req.query.minScore as string) || 0;
     const localOnly = req.query.localOnly === "true";
-    const subreddit = req.query.subreddit?.trim() || undefined;
-    const since = req.query.since ? new Date(req.query.since) : undefined;
+    const subreddit = (req.query.subreddit as string)?.trim() || undefined;
+    const since = req.query.since ? new Date(req.query.since as string) : undefined;
 
     const where = {
       ...(minScore > 0 && { score: { gte: minScore } }),
@@ -89,8 +89,8 @@ app.get("/api/alerts", async (req, res) => {
       page,
       pages: Math.ceil(total / limit),
     });
-  } catch (err) {
-    log("error", `GET /api/alerts — ${err.message}`);
+  } catch (err: unknown) {
+    log("error", `GET /api/alerts — ${err instanceof Error ? err.message : String(err)}`);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -104,8 +104,8 @@ app.get("/api/alerts/:id", async (req, res) => {
     const alert = await prisma.alert.findUnique({ where: { id } });
     if (!alert) return res.status(404).json({ error: "Not found" });
     res.json(alert);
-  } catch (err) {
-    log("error", `GET /api/alerts/${id} — ${err.message}`);
+  } catch (err: unknown) {
+    log("error", `GET /api/alerts/${id} — ${err instanceof Error ? err.message : String(err)}`);
     res.status(500).json({ error: "Internal server error" });
   }
 });

@@ -1,7 +1,7 @@
 // Comic Vine extracted keywords - 2026-03-22
 // Generated 1702 total keywords, showing top 1000
 
-export const COMIC_VINE_KEYWORDS = [
+export const COMIC_VINE_KEYWORDS: [string, number][] = [
   ["jumbo comics", 6], // series:current
   ["superman", 6], // series:current
   ["magic comics", 6], // series:current
