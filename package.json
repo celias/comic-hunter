@@ -1,27 +1,40 @@
 {
-  "name": "comic_hunter_js",
+  "name": "comic-hunter",
   "version": "1.0.0",
-  "description": "Polls Reddit RSS feeds for free/cheap comics and collectibles, alerts via Discord.",
+  "description": "Monorepo for Comic Hunter - Reddit poller with React dashboard",
+  "private": true,
+  "workspaces": [
+    "dashboard"
+  ],
   "scripts": {
+    "dev": "npx tsx api-server.js",
     "start": "npx tsx reddit-poller.js",
     "server": "npx tsx api-server.js",
-    "dashboard": "cd dashboard && npm run dev",
-    "dashboard:build": "cd dashboard && npm run build"
+    "dashboard": "npm run dev --workspace=comic-hunter-dashboard",
+    "dashboard:build": "npm run build --workspace=comic-hunter-dashboard",
+    "dev:all": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "dev:manual": "concurrently \"npm run server\" \"npm run dashboard\"",
+    "test:api": "npx tsx test-discord.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
+  "packageManager": "npm@10.0.0",
   "dependencies": {
     "@prisma/adapter-pg": "^7.5.0",
     "@prisma/client": "^7.5.0",
     "cors": "^2.8.5",
     "dotenv": "^17.3.1",
     "express": "^4.21.2",
+    "node-fetch": "^3.3.2",
     "pg": "^8.20.0",
     "prisma": "^7.5.0"
   },
   "devDependencies": {
-    "tsx": "^4.21.0"
+    "concurrently": "^9.1.0",
+    "tsx": "^4.21.0",
+    "turbo": "^2.8.20"
   }
 }
