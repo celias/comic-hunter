@@ -188,6 +188,25 @@ Content keyword weights as `[keyword, points]` tuples. Imported by:
 
 Location keyword weights live in `lib/config.js` (which also holds `GEO_SUBS`, `SCORE_THRESHOLD`, `DISCORD_WEBHOOK_URL`).
 
+### Comic Vine API Integration
+
+**One-time keyword extraction** (`extract-comic-vine-keywords.js`):
+
+- Extracts character, series, publisher, and creator keywords from Comic Vine API
+- Rate-limited to 200 requests/hour (20-second delays)
+- Caches responses in `./comic-vine-cache/` to prevent duplicate API calls
+- Outputs ES module (`comic-vine-keywords.js`) for integration with main keywords
+- Testing modes: `--dry-run`, `--cache-only`, `--test <endpoint>`, `--limit <number>`
+
+**VS Code Copilot Customizations**:
+
+- Comic Vine API specialist agent (`@comic-vine-api`)
+- Workspace-wide rate limit awareness
+- Auto-applied API patterns for matching files
+- API testing prompt (`/test-comic-vine-api`)
+
+Files: `.github/agents/`, `.github/instructions/`, `.github/prompts/`, `.github/copilot-instructions.md`
+
 ---
 
 ## eBay Flip Value
@@ -268,23 +287,46 @@ model Alert {
 
 ## Running Locally
 
+**Development (parallel execution with Turborepo):**
+
 ```bash
-# poller
-npm start
+# Both API server + dashboard
+npm run dev:all
 
-# API server
-npm run server
+# Individual processes
+npm start               # Reddit poller
+npm run server          # API server only  
+npm run dashboard       # Dashboard only
+npm run dev:manual      # Parallel with concurrently (fallback)
+```
 
-# dashboard (Vite dev server on port 5173)
-npm run dashboard
+**Production:**
+
+```bash
+# Build optimized dashboard
+npm run build
+
+# Test Discord webhook
+npm run test:api
 ```
 
 Verify API: `curl http://localhost:3001/api/health`
 
 ---
 
+## Monorepo Structure
+
+This project uses **npm workspaces** + **Turborepo** for optimal dependency management and build orchestration:
+
+- **Root**: Backend services (poller, API, shared lib)
+- **dashboard/**: React + Vite frontend (workspace package)
+- **Single `npm install`**: Hoisted shared dependencies
+- **Intelligent caching**: Turborepo only rebuilds what changed
+- **Parallel execution**: Multiple services run simultaneously
+
 ## Notes
 
 - Node engine warnings from Prisma 7.5 (`^22.12` required) — resolve by running with nvm Node v20.20.1 as set
-- Dashboard uses Vite 6 (not 8) for Node v20 compatibility
+- Dashboard uses Vite 6 (not 8) for Node v20 compatibility  
 - The poller saves ALL posts to the database regardless of score; the dashboard defaults minScore to 10 to filter noise
+- Turborepo provides build caching and task orchestration for efficient development
