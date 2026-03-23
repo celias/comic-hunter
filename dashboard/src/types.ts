@@ -17,6 +17,12 @@ export interface SerializedAlert {
   matchedLocation: string[];
   postedAt: string;
   seenAt: string;
+  imageUrl: string | null;
+  imageSource: string | null;
+  imageWidth: number | null;
+  imageHeight: number | null;
+  imageFetchedAt: string | null;
+  imageConfidence: number | null;
   flipMinSold: number | null;
   flipMaxSold: number | null;
   flipMinListed: number | null;

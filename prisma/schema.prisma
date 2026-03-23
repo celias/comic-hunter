@@ -28,6 +28,20 @@ model Alert {
   postedAt        DateTime
   seenAt          DateTime @default(now())
 
+  // Image fields
+  imageUrl        String?
+  imageSource     String?
+  imageWidth      Int?
+  imageHeight     Int?
+  imageFetchedAt  DateTime?
+  imageConfidence Float?
+
+  // ComicSwap formatting fields
+  comicswapIsValidFormat Boolean?
+  comicswapLocation     String?
+  comicswapHave         String?
+  comicswapWant         String?
+
   // eBay flip fields — nullable, populated async once API key arrives
   flipMinSold     Float?
   flipMaxSold     Float?

@@ -31,6 +31,22 @@ export default function AlertDetail({ alert, weights }: AlertDetailProps) {
 
   return (
     <div className="px-4 pb-4 pt-2 space-y-3 text-sm">
+      {/* Image preview */}
+      {alert.imageUrl && (
+        <div className="flex justify-center">
+          <img
+            src={alert.imageUrl}
+            alt="Comic preview"
+            className="max-w-sm max-h-64 object-contain rounded border border-gray-700"
+            onError={(e) => {
+              // Hide on error, don't show broken image icon
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+            }}
+          />
+        </div>
+      )}
+
       {alert.body && (
         <div className="bg-gray-950 rounded p-3 text-gray-300 whitespace-pre-wrap break-words max-h-60 overflow-y-auto border border-gray-800">
           {alert.body}
@@ -60,6 +76,12 @@ export default function AlertDetail({ alert, weights }: AlertDetailProps) {
           <span className="text-gray-500">Seen</span>
           <p className="text-gray-300 mt-0.5">{formatDate(alert.seenAt)}</p>
         </div>
+        {alert.imageSource && (
+          <div>
+            <span className="text-gray-500">Image Source</span>
+            <p className="text-gray-300 mt-0.5">{alert.imageSource}</p>
+          </div>
+        )}
         {alert.isLocal && (
           <div>
             <span className="text-gray-500">Location</span>
@@ -133,14 +155,16 @@ export default function AlertDetail({ alert, weights }: AlertDetailProps) {
         </div>
       )}
 
-      <a
-        href={alert.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 hover:underline"
-      >
-        View on Reddit &rarr;
-      </a>
+      <div className="pt-2 border-t border-gray-800">
+        <a
+          href={alert.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-400 hover:text-blue-300 text-xs underline"
+        >
+          View on Reddit →
+        </a>
+      </div>
     </div>
   );
 }

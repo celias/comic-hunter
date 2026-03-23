@@ -45,6 +45,17 @@ interface RedditPost {
   author: string;
   createdAt: string;
   subreddit: string;
+  imageUrl?: string;
+  imageSource?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  // ComicSwap specific fields
+  comicswapData?: {
+    isValidFormat: boolean;
+    location?: string;
+    have?: string;
+    want?: string;
+  };
 }
 
 function scorePost(title = "", body = ""): { score: number; matched: string[] } {
@@ -58,6 +69,41 @@ function scorePost(title = "", body = ""): { score: number; matched: string[] } 
     }
   }
   return { score, matched };
+}
+
+// ─── ComicSwap Formatting ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/**
+ * Parse and validate r/comicswap post formatting.
+ * Required format: [Country/State] [H] Comics you have [W] Comics you want
+ * Example: [NY] [H] Swamp Thing N52 TPB Vol 1-3 [W] Wolverine back issues or PayPal
+ * 
+ * Note: There must be a space after the [Location] before the [H].
+ * The Automoderator removes posts that don't follow this exact formatting.
+ */
+function parseComicSwapFormat(title: string): {
+  isValidFormat: boolean;
+  location?: string;
+  have?: string;
+  want?: string;
+} {
+  // Match pattern: [Location] [H] have content [W] want content
+  // Note: requires space after location bracket before [H]
+  const comicswapRegex = /^\[([^\]]+)\]\s+\[H\]\s*([^\[]+)\s*\[W\]\s*(.+)$/i;
+  const match = title.match(comicswapRegex);
+  
+  if (!match) {
+    return { isValidFormat: false };
+  }
+  
+  const [, location, have, want] = match;
+  
+  return {
+    isValidFormat: true,
+    location: location.trim(),
+    have: have.trim(),
+    want: want.trim()
+  };
 }
 
 // ─── Location Scoring ─────────────────────────────────────────────────────────
@@ -94,6 +140,85 @@ function scoreLocation(subreddit: string, title = "", body = ""): { locationScor
   return { locationScore, isLocal, matchedLocation };
 }
 
+// ─── Image Extraction ─────────────────────────────────────────────────────────
+
+function extractImageFromRedditPost(data: any): { imageUrl?: string; imageSource?: string; imageWidth?: number; imageHeight?: number } {
+  // Priority 1: Direct image URL from post URL (i.redd.it — works everywhere including Discord)
+  if (data.url && isDirectImageUrl(data.url)) {
+    return {
+      imageUrl: data.url,
+      imageSource: 'reddit_direct',
+      imageWidth: data.preview?.images?.[0]?.source?.width,
+      imageHeight: data.preview?.images?.[0]?.source?.height,
+    };
+  }
+
+  // Priority 2: Gallery — prefer i.redd.it URL constructed from media ID
+  if (data.gallery_data?.items?.length > 0 && data.media_metadata) {
+    const firstItem = data.gallery_data.items[0];
+    const mediaId = firstItem.media_id;
+    const media = data.media_metadata[mediaId];
+    if (media?.status === 'valid' || media?.s) {
+      // Build direct i.redd.it URL from media ID + mime type
+      const ext = media.m?.split('/')?.[1] || 'jpg'; // e.g. "image/jpg" -> "jpg"
+      const directUrl = `https://i.redd.it/${mediaId}.${ext}`;
+      return {
+        imageUrl: directUrl,
+        imageSource: 'reddit_gallery',
+        imageWidth: media.s?.x,
+        imageHeight: media.s?.y,
+      };
+    }
+  }
+
+  // Priority 3: Preview image (preview.redd.it — works in browsers but may not render in Discord)
+  if (data.preview?.images?.length > 0) {
+    const preview = data.preview.images[0];
+    if (preview.source?.url) {
+      const url = preview.source.url.replace(/&amp;/g, '&');
+      if (isValidImageUrl(url)) {
+        return {
+          imageUrl: url,
+          imageSource: 'reddit_preview',
+          imageWidth: preview.source.width,
+          imageHeight: preview.source.height
+        };
+      }
+    }
+  }
+
+  // Priority 4: Thumbnail only if valid and not placeholder
+  if (data.thumbnail) {
+    const thumb = data.thumbnail;
+    if (isValidImageUrl(thumb) && !isPlaceholderThumbnail(thumb)) {
+      return {
+        imageUrl: thumb,
+        imageSource: 'reddit_thumb'
+      };
+    }
+  }
+
+  // Priority 5: No valid image found
+  return { imageSource: 'none' };
+}
+
+function isDirectImageUrl(url: string): boolean {
+  if (!url || typeof url !== 'string') return false;
+  return /^https?:\/\/i\.redd\.it\/.+/i.test(url) ||
+         /^https?:\/\/i\.imgur\.com\/.+/i.test(url) ||
+         /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url);
+}
+
+function isValidImageUrl(url: string): boolean {
+  if (!url || typeof url !== 'string') return false;
+  return url.startsWith('http://') || url.startsWith('https://');
+}
+
+function isPlaceholderThumbnail(thumb: string): boolean {
+  const placeholders = ['self', 'default', 'nsfw', 'spoiler', ''];
+  return placeholders.includes(thumb);
+}
+
 // ─── JSON Fetching & Parsing ──────────────────────────────────────────────────
 
 /**
@@ -118,15 +243,27 @@ async function fetchPosts(subreddit: string): Promise<RedditPost[]> {
   const json: any = await res.json();
   const posts = json?.data?.children ?? [];
 
-  return posts.map(({ data }) => ({
-    id: data.id,
-    title: data.title ?? "",
-    body: data.selftext ?? "",
-    url: `https://reddit.com${data.permalink}`,
-    author: data.author ?? "unknown",
-    createdAt: new Date(data.created_utc * 1000).toISOString(),
-    subreddit,
-  }));
+  return posts.map(({ data }) => {
+    const imageData = extractImageFromRedditPost(data);
+    const title = data.title ?? "";
+    
+    // Parse ComicSwap formatting if this is from r/comicswap
+    const comicswapData = subreddit === 'comicswap' 
+      ? parseComicSwapFormat(title)
+      : undefined;
+    
+    return {
+      id: data.id,
+      title,
+      body: data.selftext ?? "",
+      url: `https://reddit.com${data.permalink}`,
+      author: data.author ?? "unknown",
+      createdAt: new Date(data.created_utc * 1000).toISOString(),
+      subreddit,
+      ...imageData,
+      comicswapData,
+    };
+  });
 }
 
 // ─── Database (Prisma → Neon Postgres) ───────────────────────────────────────
@@ -150,6 +287,17 @@ async function saveAlert(post: RedditPost, score: number, matched: string[], isL
       isLocal,
       matchedLocation,
       postedAt: new Date(post.createdAt),
+      imageUrl: post.imageUrl,
+      imageSource: post.imageSource,
+      imageWidth: post.imageWidth,
+      imageHeight: post.imageHeight,
+      imageFetchedAt: post.imageUrl ? new Date() : null,
+      imageConfidence: post.imageUrl ? 1.0 : null, // Phase 1: Reddit images have full confidence
+      // ComicSwap fields
+      comicswapIsValidFormat: post.comicswapData?.isValidFormat,
+      comicswapLocation: post.comicswapData?.location,
+      comicswapHave: post.comicswapData?.have,
+      comicswapWant: post.comicswapData?.want,
     },
   });
 }
@@ -185,33 +333,55 @@ async function sendDiscordAlert(
     ? `📍 South/Central NJ  •  ${matchedLocation.join(", ")}`
     : "🌐 Location unknown";
 
-  const payload = {
-    username: "🕵️ Comic Hunter",
-    embeds: [
+  const embed: any = {
+    title: post.title.slice(0, 256),
+    url: post.url,
+    color: scoreColor(score),
+    description: preview + truncated || "*No body text*",
+    fields: [
+      { name: "🏆 Score", value: String(score), inline: true },
+      { name: "📌 Subreddit", value: `r/${post.subreddit}`, inline: true },
+      { name: "👤 Author", value: post.author, inline: true },
       {
-        title: post.title.slice(0, 256),
-        url: post.url,
-        color: scoreColor(score),
-        description: preview + truncated || "*No body text*",
-        fields: [
-          { name: "🏆 Score", value: String(score), inline: true },
-          { name: "📌 Subreddit", value: `r/${post.subreddit}`, inline: true },
-          { name: "👤 Author", value: post.author, inline: true },
-          {
-            name: "🔑 Matched Keywords",
-            value: matched.join(", "),
-            inline: false,
-          },
-          {
-            name: "📍 Location",
-            value: locationLabel,
-            inline: false,
-          },
-        ],
-        footer: { text: "comic_hunter • json" },
-        timestamp: new Date(post.createdAt).toISOString(),
+        name: "🔑 Matched Keywords",
+        value: matched.join(", "),
+        inline: false,
+      },
+      {
+        name: "📍 Location",
+        value: locationLabel,
+        inline: false,
       },
     ],
+    footer: { text: "comic_hunter • json" },
+    timestamp: new Date(post.createdAt).toISOString(),
+  };
+
+  // Add ComicSwap formatting info if applicable
+  if (post.comicswapData?.isValidFormat) {
+    embed.fields.push({
+      name: "🔄 ComicSwap Format",
+      value: `**Location:** ${post.comicswapData.location}\n**Have:** ${post.comicswapData.have.slice(0, 100)}${post.comicswapData.have.length > 100 ? "..." : ""}\n**Want:** ${post.comicswapData.want.slice(0, 100)}${post.comicswapData.want.length > 100 ? "..." : ""}`,
+      inline: false,
+    });
+  } else if (post.subreddit === 'comicswap' && post.comicswapData) {
+    embed.fields.push({
+      name: "⚠️ ComicSwap Format",
+      value: "**Invalid formatting** - This post may be removed by Automoderator.\nRequired: `[Location] [H] Items [W] Items`",
+      inline: false,
+    });
+  }
+
+  // Add image as large embed image if available
+  if (post.imageUrl) {
+    embed.image = {
+      url: post.imageUrl,
+    };
+  }
+
+  const payload = {
+    username: "🕵️ Comic Hunter",
+    embeds: [embed],
   };
 
   const res = await fetch(config.DISCORD_WEBHOOK_URL!, {
@@ -253,6 +423,16 @@ async function pollSubreddit(subreddit: string, seenOnStartup: Set<string>): Pro
     if (seenOnStartup.has(post.id)) continue;
     if (await alreadySeen(post.id)) continue;
 
+    // Check ComicSwap formatting if applicable
+    let formatPenalty = 0;
+    let formatWarning = "";
+    if (post.subreddit === 'comicswap' && post.comicswapData) {
+      if (!post.comicswapData.isValidFormat) {
+        formatPenalty = -5; // Penalty for invalid formatting (likely to be removed)
+        formatWarning = " [INVALID FORMAT - likely to be removed by Automoderator]";
+      }
+    }
+
     const { score: contentScore, matched } = scorePost(post.title, post.body);
     const { locationScore, isLocal, matchedLocation } = scoreLocation(
       post.subreddit,
@@ -260,17 +440,24 @@ async function pollSubreddit(subreddit: string, seenOnStartup: Set<string>): Pro
       post.body,
     );
 
-    const score = contentScore + locationScore;
+    const score = contentScore + locationScore + formatPenalty;
 
     if (score >= config.SCORE_THRESHOLD) {
       const localTag = isLocal ? "📍" : "🌐";
+      const imageTag = post.imageUrl ? "🖼️" : "📝";
       log(
         "info",
-        `HIT [${score}] ${localTag} r/${subreddit} — ${post.title.slice(0, 60)}`,
+        `HIT [${score}] ${localTag}${imageTag} r/${subreddit} — ${post.title.slice(0, 60)}${formatWarning}`,
       );
       log("info", `     Keywords: ${matched.join(", ")}`);
       if (matchedLocation.length > 0) {
         log("info", `     Location: ${matchedLocation.join(", ")}`);
+      }
+      if (post.imageSource) {
+        log("info", `     Image: ${post.imageSource}${post.imageUrl ? ` (${post.imageWidth}x${post.imageHeight})` : ""}`);
+      }
+      if (post.comicswapData?.isValidFormat) {
+        log("info", `     ComicSwap: [${post.comicswapData.location}] H: ${post.comicswapData.have.slice(0, 30)}... W: ${post.comicswapData.want.slice(0, 30)}...`);
       }
       try {
         await sendDiscordAlert(post, score, matched, isLocal, matchedLocation);
@@ -280,7 +467,7 @@ async function pollSubreddit(subreddit: string, seenOnStartup: Set<string>): Pro
     } else {
       log(
         "debug",
-        `skip [${score}] r/${subreddit} — ${post.title.slice(0, 40)}`,
+        `skip [${score}] r/${subreddit} — ${post.title.slice(0, 40)}${formatWarning}`,
       );
     }
 
