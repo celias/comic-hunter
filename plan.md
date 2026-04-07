@@ -295,7 +295,7 @@ npm run dev:all
 
 # Individual processes
 npm start               # Reddit poller
-npm run server          # API server only  
+npm run server          # API server only
 npm run dashboard       # Dashboard only
 npm run dev:manual      # Parallel with concurrently (fallback)
 ```
@@ -327,6 +327,6 @@ This project uses **npm workspaces** + **Turborepo** for optimal dependency mana
 ## Notes
 
 - Node engine warnings from Prisma 7.5 (`^22.12` required) — resolve by running with nvm Node v20.20.1 as set
-- Dashboard uses Vite 6 (not 8) for Node v20 compatibility  
+- Dashboard uses Vite 6 (not 8) for Node v20 compatibility
 - The poller saves ALL posts to the database regardless of score; the dashboard defaults minScore to 10 to filter noise
 - Turborepo provides build caching and task orchestration for efficient development

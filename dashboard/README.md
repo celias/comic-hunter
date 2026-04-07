@@ -36,10 +36,10 @@ Output goes to `dashboard/dist/`.
 
 ## Key components
 
-| Component | Purpose |
-|-----------|---------|
-| `App.tsx` | Root — fetches alerts and keywords, owns filter state |
-| `FilterBar.tsx` | Subreddit / score / local-only filters |
-| `AlertCard.tsx` | Single alert row with score badge and image |
-| `ScoreBadge.tsx` | Color-coded score indicator |
-| `KeywordPanel.tsx` | Sidebar keyword weight display |
+| Component          | Purpose                                               |
+| ------------------ | ----------------------------------------------------- |
+| `App.tsx`          | Root — fetches alerts and keywords, owns filter state |
+| `FilterBar.tsx`    | Subreddit / score / local-only filters                |
+| `AlertCard.tsx`    | Single alert row with score badge and image           |
+| `ScoreBadge.tsx`   | Color-coded score indicator                           |
+| `KeywordPanel.tsx` | Sidebar keyword weight display                        |

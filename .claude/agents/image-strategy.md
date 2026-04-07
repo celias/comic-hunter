@@ -138,7 +138,7 @@ Execution requirements:
 - Asynchronous queue/worker so poller cadence and API latency are unaffected
 - Rate limiting + retries with backoff
 - Confidence policy:
-  - >= 0.85 auto-attach
+  - > = 0.85 auto-attach
   - 0.60 to 0.84 hold for manual-review path
   - < 0.60 keep empty
 

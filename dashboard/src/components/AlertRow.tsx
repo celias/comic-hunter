@@ -18,7 +18,11 @@ interface AlertRowProps {
   onToggle: () => void;
 }
 
-export default function AlertRow({ alert, isExpanded, onToggle }: AlertRowProps) {
+export default function AlertRow({
+  alert,
+  isExpanded,
+  onToggle,
+}: AlertRowProps) {
   return (
     <div
       className={`border rounded-lg transition-colors ${
@@ -41,7 +45,7 @@ export default function AlertRow({ alert, isExpanded, onToggle }: AlertRowProps)
               onError={(e) => {
                 // Fallback to placeholder on error
                 const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
+                target.style.display = "none";
                 target.parentElement!.innerHTML = `
                   <div class="w-full h-full flex items-center justify-center bg-gray-800 border border-gray-700 rounded">
                     <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
@@ -58,7 +62,9 @@ export default function AlertRow({ alert, isExpanded, onToggle }: AlertRowProps)
                   <span className="text-xs text-black font-bold">💭</span>
                 </div>
                 <div className="text-[8px] text-gray-400 leading-tight">
-                  Sorry,<br/>no image
+                  Sorry,
+                  <br />
+                  no image
                 </div>
               </div>
             </div>

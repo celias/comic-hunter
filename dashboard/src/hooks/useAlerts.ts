@@ -21,7 +21,7 @@ export function useAlerts(filters: Filters) {
       if (since) params.since = since;
       return params;
     },
-    [filters.minScore, filters.localOnly, filters.subreddit],
+    [filters.minScore, filters.localOnly, filters.subreddit]
   );
 
   const loadInitial = useCallback(async () => {

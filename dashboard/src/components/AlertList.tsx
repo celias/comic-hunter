@@ -11,7 +11,8 @@ interface AlertListProps {
 export default function AlertList({ alerts, weights }: AlertListProps) {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
-  const toggle = (id: number): void => setExpandedId((prev) => (prev === id ? null : id));
+  const toggle = (id: number): void =>
+    setExpandedId((prev) => (prev === id ? null : id));
 
   return (
     <div className="space-y-2">

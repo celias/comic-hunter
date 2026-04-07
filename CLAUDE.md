@@ -15,11 +15,11 @@ Comic Hunter monitors Reddit for free and cheap comic deals, scores posts by key
 
 ## Architecture — 3 Processes
 
-| Process | File | Port | Purpose |
-|---------|------|------|---------|
-| Reddit Poller | `reddit-poller.ts` | — | Polls subreddits, scores posts, saves alerts, fires Discord webhooks |
-| API Server | `api-server.ts` | 3001 | Express — serves alerts and keyword data to the dashboard |
-| Dashboard | `dashboard/` | 5173 | React — real-time alert browser with filters |
+| Process       | File               | Port | Purpose                                                              |
+| ------------- | ------------------ | ---- | -------------------------------------------------------------------- |
+| Reddit Poller | `reddit-poller.ts` | —    | Polls subreddits, scores posts, saves alerts, fires Discord webhooks |
+| API Server    | `api-server.ts`    | 3001 | Express — serves alerts and keyword data to the dashboard            |
+| Dashboard     | `dashboard/`       | 5173 | React — real-time alert browser with filters                         |
 
 ## Common Commands
 

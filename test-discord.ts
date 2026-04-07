@@ -10,7 +10,11 @@
 
 import { config } from "./lib/config.ts";
 
-async function sendTestEmbed(label: string, isLocal: boolean, matchedLocation: string[]): Promise<void> {
+async function sendTestEmbed(
+  label: string,
+  isLocal: boolean,
+  matchedLocation: string[]
+): Promise<void> {
   const locationLabel = isLocal
     ? `📍 South/Central NJ  •  ${matchedLocation.join(", ")}`
     : "🌐 Location unknown";

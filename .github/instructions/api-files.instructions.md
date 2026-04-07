@@ -26,7 +26,7 @@ try {
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(
-      `API request failed: ${response.status} ${response.statusText}`,
+      `API request failed: ${response.status} ${response.statusText}`
     );
   }
   const data = await response.json();

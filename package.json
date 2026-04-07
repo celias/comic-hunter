@@ -15,7 +15,12 @@
     "dev:all": "turbo run dev --parallel",
     "build": "turbo run build",
     "dev:manual": "concurrently \"npm run server\" \"npm run dashboard\"",
-    "test:api": "npx tsx test-discord.ts"
+    "test:api": "npx tsx test-discord.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -33,9 +38,25 @@
     "prisma": "^7.5.0"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.58.0",
+    "@typescript-eslint/parser": "^8.58.0",
     "concurrently": "^9.1.0",
+    "eslint": "^10.2.0",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.1",
     "tsx": "^4.21.0",
     "turbo": "^2.8.20",
     "typescript": "^5.9.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,jsx,json,md}": [
+      "prettier --write"
+    ]
   }
 }

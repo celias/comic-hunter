@@ -84,7 +84,7 @@ class ComicVineExtractor {
         const cached = JSON.parse(fs.readFileSync(cachePath, "utf8"));
         this.cacheHits++;
         return cached;
-      } catch (error) {
+      } catch {
         console.warn(`⚠️  Invalid cache file: ${cacheKey}`);
         return null;
       }
@@ -98,7 +98,7 @@ class ComicVineExtractor {
     const cachePath = this.getCachePath(cacheKey);
     try {
       fs.writeFileSync(cachePath, JSON.stringify(data, null, 2));
-    } catch (error) {
+    } catch {
       console.warn(`⚠️  Failed to save cache: ${cacheKey}`);
     }
   }
@@ -110,7 +110,7 @@ class ComicVineExtractor {
     const cached = this.loadFromCache(cacheKey);
     if (cached) {
       console.log(
-        `💾 [${this.cacheHits}] Cache hit: ${endpoint} (offset: ${params.offset || 0})`,
+        `💾 [${this.cacheHits}] Cache hit: ${endpoint} (offset: ${params.offset || 0})`
       );
       return cached;
     }
@@ -118,7 +118,7 @@ class ComicVineExtractor {
     // Cache only mode - don't make new requests
     if (isCacheOnly) {
       console.log(
-        `❌ Cache miss (cache-only mode): ${endpoint} (offset: ${params.offset || 0})`,
+        `❌ Cache miss (cache-only mode): ${endpoint} (offset: ${params.offset || 0})`
       );
       return { results: [], error: "OK" }; // Return empty results
     }
@@ -126,7 +126,7 @@ class ComicVineExtractor {
     // Dry run mode - simulate response
     if (isDryRun) {
       console.log(
-        `🧪 [DRY] Would fetch: ${endpoint} (offset: ${params.offset || 0})`,
+        `🧪 [DRY] Would fetch: ${endpoint} (offset: ${params.offset || 0})`
       );
       await sleep(100); // Brief pause for realism
       return {
@@ -147,7 +147,7 @@ class ComicVineExtractor {
     }
 
     console.log(
-      `[${++this.requestCount}] Fetching: ${endpoint} (offset: ${params.offset || 0})`,
+      `[${++this.requestCount}] Fetching: ${endpoint} (offset: ${params.offset || 0})`
     );
 
     const response = await fetch(url.toString(), {
@@ -158,7 +158,7 @@ class ComicVineExtractor {
 
     if (!response.ok) {
       throw new Error(
-        `API request failed: ${response.status} ${response.statusText}`,
+        `API request failed: ${response.status} ${response.statusText}`
       );
     }
 
@@ -270,7 +270,7 @@ class ComicVineExtractor {
             this.addKeyword(
               char.real_name,
               3,
-              `character:${publisher.name}:real`,
+              `character:${publisher.name}:real`
             );
           }
 
@@ -282,7 +282,7 @@ class ComicVineExtractor {
               this.addKeyword(
                 alias.trim(),
                 3,
-                `character:${publisher.name}:alias`,
+                `character:${publisher.name}:alias`
               );
             });
           }
@@ -347,12 +347,12 @@ class ComicVineExtractor {
             // Weight by issue count (popularity proxy)
             const weight = Math.min(
               6,
-              2 + Math.floor(series.count_of_issues / 20),
+              2 + Math.floor(series.count_of_issues / 20)
             );
             this.addKeyword(
               series.name,
               weight,
-              `series:${range.name.toLowerCase()}`,
+              `series:${range.name.toLowerCase()}`
             );
             seriesCount++;
           }
@@ -445,7 +445,7 @@ class ComicVineExtractor {
           ];
 
           const weight = notableCreators.some((notable) =>
-            creator.name.toLowerCase().includes(notable),
+            creator.name.toLowerCase().includes(notable)
           )
             ? 5
             : 2;
@@ -495,7 +495,7 @@ class ComicVineExtractor {
           ];
 
           const weight = majorEvents.some((event) =>
-            arc.name.toLowerCase().includes(event),
+            arc.name.toLowerCase().includes(event)
           )
             ? 5
             : 3;
@@ -544,7 +544,7 @@ class ComicVineExtractor {
         const weight = majorPublishers.some((major) => pub.name.includes(major))
           ? 4
           : indiePublishers.some((indie) =>
-                pub.name.toLowerCase().includes(indie.toLowerCase()),
+                pub.name.toLowerCase().includes(indie.toLowerCase())
               )
             ? 3
             : 2;
@@ -660,7 +660,7 @@ class ComicVineExtractor {
     });
 
     console.log(
-      `Found ${newKeywords.length} new keywords not in existing list`,
+      `Found ${newKeywords.length} new keywords not in existing list`
     );
     console.log(`Found ${duplicates.length} keywords already covered`);
 
@@ -669,7 +669,7 @@ class ComicVineExtractor {
     console.log("\n🔥 Top 20 new keyword additions:");
     newKeywords.slice(0, 20).forEach((kw, i) => {
       console.log(
-        `${i + 1}. "${kw.keyword}" (weight: ${kw.weight}) - ${kw.source}`,
+        `${i + 1}. "${kw.keyword}" (weight: ${kw.weight}) - ${kw.source}`
       );
     });
   }
@@ -703,7 +703,7 @@ class ComicVineExtractor {
             break;
           default:
             throw new Error(
-              `Unknown test endpoint: ${testEndpoint}. Use: characters, series, teams, creators, story-arcs, publishers`,
+              `Unknown test endpoint: ${testEndpoint}. Use: characters, series, teams, creators, story-arcs, publishers`
             );
         }
       } else {
@@ -727,7 +727,7 @@ class ComicVineExtractor {
   generateOutput() {
     console.log("\n=== Extraction Complete ===");
     console.log(
-      `Total unique keywords extracted: ${this.extractedKeywords.size}`,
+      `Total unique keywords extracted: ${this.extractedKeywords.size}`
     );
     console.log(`API requests made: ${this.requestCount}`);
     console.log(`Cache hits: ${this.cacheHits}`);
@@ -739,7 +739,7 @@ class ComicVineExtractor {
 
     // Sort by weight (highest first)
     const sortedKeywords = Array.from(this.extractedKeywords.values()).sort(
-      (a, b) => b.weight - a.weight,
+      (a, b) => b.weight - a.weight
     );
 
     // Group by source for analysis
@@ -760,7 +760,7 @@ class ComicVineExtractor {
       .slice(0, 1000) // Top 1000 keywords (increased from 500)
       .map(
         (kw) =>
-          `  ["${kw.keyword.replace(/"/g, '\\"')}", ${kw.weight}], // ${kw.source}`,
+          `  ["${kw.keyword.replace(/"/g, '\\"')}", ${kw.weight}], // ${kw.source}`
       )
       .join("\n");
 
@@ -788,7 +788,7 @@ ${jsArray}
     console.log("\n🔝 Top 20 keywords preview:");
     sortedKeywords.slice(0, 20).forEach((kw, i) => {
       console.log(
-        `${i + 1}. "${kw.keyword}" (weight: ${kw.weight}) - ${kw.source}`,
+        `${i + 1}. "${kw.keyword}" (weight: ${kw.weight}) - ${kw.source}`
       );
     });
   }

@@ -12,5 +12,10 @@
     "isolatedModules": true
   },
   "include": ["*.ts", "lib/**/*.ts"],
-  "exclude": ["node_modules", "generated", "dashboard", "extract-comic-vine-keywords.ts"]
+  "exclude": [
+    "node_modules",
+    "generated",
+    "dashboard",
+    "extract-comic-vine-keywords.ts"
+  ]
 }

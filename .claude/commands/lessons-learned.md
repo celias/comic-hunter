@@ -1,6 +1,7 @@
 Something went wrong or took too long. Let's capture it.
 
 Ask me:
+
 1. What happened?
 2. Why did it happen? (Push past "I messed up" — what's the systemic reason?)
 3. What's the rule going forward to prevent this?

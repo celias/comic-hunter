@@ -6,7 +6,8 @@ function formatDate(dateStr: string): string {
 }
 
 function weightStyle(weight: number): string {
-  if (weight >= 8) return "bg-red-900/60 text-red-200 border-red-700 font-semibold";
+  if (weight >= 8)
+    return "bg-red-900/60 text-red-200 border-red-700 font-semibold";
   if (weight >= 5) return "bg-yellow-900/40 text-yellow-200 border-yellow-700";
   return "bg-gray-800 text-gray-300 border-gray-700";
 }
@@ -41,7 +42,7 @@ export default function AlertDetail({ alert, weights }: AlertDetailProps) {
             onError={(e) => {
               // Hide on error, don't show broken image icon
               const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
+              target.style.display = "none";
             }}
           />
         </div>

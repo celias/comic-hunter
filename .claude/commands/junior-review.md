@@ -3,6 +3,7 @@ Pull up ticket $ARGUMENTS from Linear and review the plan like a junior engineer
 Your job is NOT to implement it. Your job is to ask every question you can think of before a single line of code gets written.
 
 For every statement in the plan, ask yourself:
+
 - What if this fails? What's the fallback?
 - Is this ambiguous? Could I interpret it two different ways?
 - What are the edge cases?

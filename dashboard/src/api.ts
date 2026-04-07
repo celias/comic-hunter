@@ -1,9 +1,13 @@
-import type { AlertsResponse, SerializedAlert, KeywordsResponse } from "./types.ts";
+import type {
+  AlertsResponse,
+  SerializedAlert,
+  KeywordsResponse,
+} from "./types.ts";
 
 const BASE = "/api";
 
 export async function fetchAlerts(
-  params: Record<string, string | number | boolean> = {},
+  params: Record<string, string | number | boolean> = {}
 ): Promise<AlertsResponse> {
   const url = new URL(`${BASE}/alerts`, window.location.origin);
   for (const [key, value] of Object.entries(params)) {
@@ -22,7 +26,10 @@ export async function fetchAlert(id: number): Promise<SerializedAlert> {
   return res.json() as Promise<SerializedAlert>;
 }
 
-export async function checkHealth(): Promise<{ status: string; timestamp: string }> {
+export async function checkHealth(): Promise<{
+  status: string;
+  timestamp: string;
+}> {
   const res = await fetch(`${BASE}/health`);
   if (!res.ok) throw new Error(`API error: ${res.status}`);
   return res.json() as Promise<{ status: string; timestamp: string }>;
