@@ -14,7 +14,6 @@ build/
 
 # Cache directories (do not commit)
 .turbo/
-comic-vine-cache/
 
 # Generated files
 /generated/prisma/

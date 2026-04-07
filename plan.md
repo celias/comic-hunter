@@ -188,25 +188,6 @@ Content keyword weights as `[keyword, points]` tuples. Imported by:
 
 Location keyword weights live in `lib/config.js` (which also holds `GEO_SUBS`, `SCORE_THRESHOLD`, `DISCORD_WEBHOOK_URL`).
 
-### Comic Vine API Integration
-
-**One-time keyword extraction** (`extract-comic-vine-keywords.js`):
-
-- Extracts character, series, publisher, and creator keywords from Comic Vine API
-- Rate-limited to 200 requests/hour (20-second delays)
-- Caches responses in `./comic-vine-cache/` to prevent duplicate API calls
-- Outputs ES module (`comic-vine-keywords.js`) for integration with main keywords
-- Testing modes: `--dry-run`, `--cache-only`, `--test <endpoint>`, `--limit <number>`
-
-**VS Code Copilot Customizations**:
-
-- Comic Vine API specialist agent (`@comic-vine-api`)
-- Workspace-wide rate limit awareness
-- Auto-applied API patterns for matching files
-- API testing prompt (`/test-comic-vine-api`)
-
-Files: `.github/agents/`, `.github/instructions/`, `.github/prompts/`, `.github/copilot-instructions.md`
-
 ---
 
 ## eBay Flip Value

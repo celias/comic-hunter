@@ -3,7 +3,6 @@
 ## Target Agent
 
 - Preferred: architect
-- Secondary (Comic Vine specifics only): comic-vine-api
 
 ## Why This Exists
 
@@ -115,7 +114,6 @@ Dashboard compatibility notes:
 
 ## Commercial-Use Guardrails
 
-- Do not assume Comic Vine images are commercially allowed for this app without explicit approval.
 - Build provider fallback behind a feature flag (for example IMAGE_ENRICHMENT_ENABLED).
 - Keep provider selection configurable so legal-approved source can be swapped without schema changes.
 - Log provider, match reason, and confidence for auditability.
@@ -127,13 +125,6 @@ Dashboard compatibility notes:
 - Use async queue/worker pattern so polling latency is unaffected.
 - Add rate limiting and retries with backoff for any external API.
 - Ensure enrichment work does not block reddit poller loops or API responsiveness.
-
-If Comic Vine is used at all:
-
-- Respect 20-second delay between requests.
-- Use COMIC_VINE_API_KEY from environment only.
-- Use descriptive User-Agent header.
-- Validate response error payloads and handle non-OK safely.
 
 ## Matching Quality Rules (Fallback Provider)
 

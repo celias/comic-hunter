@@ -95,60 +95,6 @@ The Express server exposes three endpoints:
 
 ---
 
-## Comic Vine API Integration
-
-The project includes Comic Vine API integration for extracting character, series, and publisher keywords to enhance comic detection.
-
-### One-Time Keyword Extraction
-
-Extract high-value keywords from Comic Vine's database:
-
-```bash
-# Set up Comic Vine API key
-echo "COMIC_VINE_API_KEY=your_api_key_here" >> .env
-
-# Full extraction (respects rate limits)
-node extract-comic-vine-keywords.js
-
-# Testing modes (no duplicate API calls)
-node extract-comic-vine-keywords.js --test characters --limit 10
-node extract-comic-vine-keywords.js --dry-run
-node extract-comic-vine-keywords.js --cache-only
-
-# Show all options
-node extract-comic-vine-keywords.js --help
-```
-
-**Features:**
-
-- **Automatic caching** - Stores responses to avoid duplicate API calls
-- **Rate limit compliance** - 20-second delays between requests (200/hour limit)
-- **Testing modes** - Dry run, cache-only, endpoint testing
-- **ES module output** - Generates `comic-vine-keywords.js` for integration
-
-### VS Code Copilot Customizations
-
-The project includes specialized Copilot customizations for Comic Vine API development:
-
-**🤖 Comic Vine API Agent** (`@comic-vine-api`)
-
-- Expert guidance on Comic Vine endpoints, rate limits, authentication
-- Project-aware responses using existing code patterns
-- Usage: `@comic-vine-api How do I search for characters by popularity?`
-
-**⚙️ Automatic API Patterns**
-
-- Auto-applied to any file matching `*{api,vine,comic}*.{js,ts,mjs}`
-- Enforces rate limiting, error handling, authentication patterns
-
-**🧪 API Testing Prompt** (`/test-comic-vine-api`)
-
-- Generates test scripts for any Comic Vine endpoint
-- Includes proper rate limiting and error handling
-- Usage: `/test-comic-vine-api` → specify endpoint and parameters
-
----
-
 Edit `SCORE_THRESHOLD` in `lib/config.js`:
 
 | Threshold | What you get            |
@@ -162,13 +108,6 @@ To add content keywords, edit the `KEYWORDS` array in `lib/keywords.js`:
 
 ```js
 ["your keyword", pointValue],
-```
-
-**Comic Vine Integration**: Import extracted keywords from Comic Vine extraction:
-
-```js
-import { COMIC_VINE_KEYWORDS } from "./comic-vine-keywords.js";
-// Merge high-value keywords into main KEYWORDS array
 ```
 
 To add location keywords (South/Central NJ area), edit `LOCATION_KEYWORDS` in `lib/config.js`.
@@ -217,18 +156,3 @@ npm run build
 - eBay flip value — price lookup on local posts once API key arrives
 - Facebook Marketplace — Playwright scraper, geo-targeted listings
 - Buy Nothing — Facebook Buy Nothing group scraper (same session as Marketplace)
-
----
-
-## VS Code Development
-
-This project includes custom VS Code Copilot configurations:
-
-| File                                             | Purpose                                        |
-| ------------------------------------------------ | ---------------------------------------------- |
-| `.github/agents/comic-vine-api.agent.md`         | Comic Vine API specialist agent                |
-| `.github/copilot-instructions.md`                | Workspace-wide Comic Vine rate limit awareness |
-| `.github/instructions/api-files.instructions.md` | Auto-applied patterns for API files            |
-| `.github/prompts/test-comic-vine-api.prompt.md`  | API testing prompt                             |
-
-Use `@comic-vine-api` for Comic Vine API questions or `/test-comic-vine-api` to generate test scripts.

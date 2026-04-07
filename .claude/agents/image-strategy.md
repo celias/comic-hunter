@@ -26,7 +26,7 @@ Use this agent when work touches any of:
 - `dashboard/src/components/*`
 - Discord alert payload logic
 
-Do not use this agent for unrelated architecture planning, generic UI redesign, or broad Comic Vine API work outside image enrichment.
+Do not use this agent for unrelated architecture planning or generic UI redesign.
 
 ## Product Direction To Preserve
 
@@ -115,16 +115,8 @@ Failure handling:
 
 ## Commercial and Provider Guardrails
 
-- Do not assume Comic Vine images are commercially approved.
 - Keep any provider fallback configurable and feature-flagged.
 - Log provider, match reason, and confidence for auditability.
-
-If Comic Vine is involved at all, enforce:
-
-- Minimum 20-second delay between requests
-- `COMIC_VINE_API_KEY` from env only
-- Descriptive `User-Agent`
-- Safe handling of non-OK and API error payloads
 
 ## Enrichment Rules (Phase 2)
 
