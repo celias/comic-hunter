@@ -19,6 +19,7 @@ import cors from "cors";
 import { prisma } from "./lib/prisma.ts";
 import { KEYWORDS } from "./lib/keywords.ts";
 import { config } from "./lib/config.ts";
+import { log } from "./lib/logger.ts";
 
 const PORT = process.env.PORT ?? 3001;
 
@@ -33,13 +34,6 @@ const CORS_ORIGINS = [
 const app = express();
 app.use(cors({ origin: CORS_ORIGINS }));
 app.use(express.json());
-
-// ─── Logging helper ───────────────────────────────────────────────────────────
-
-function log(level: string, msg: string): void {
-  const ts = new Date().toISOString().replace("T", " ").slice(0, 19);
-  console.log(`${ts} [${level.toUpperCase().padEnd(5)}] ${msg}`);
-}
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 

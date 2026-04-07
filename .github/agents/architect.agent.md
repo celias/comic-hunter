@@ -12,12 +12,12 @@ Always start by reading these files to ground yourself in current state:
 
 - `plan.md` — build order, completed and pending work
 - `prisma/schema.prisma` — current data model
-- `lib/config.js` and `lib/keywords.js` — scoring and configuration
+- `lib/config.ts` and `lib/keywords.ts` — scoring and configuration
 
 ## Current Architecture (3 processes)
 
-1. **Reddit Poller** (`reddit-poller.js`) — polls 7 subreddits, scores posts, saves to Postgres, fires Discord webhooks
-2. **API Server** (`api-server.js`) — Express on :3001, serves paginated/filtered alerts + keywords
+1. **Reddit Poller** (`reddit-poller.ts`) — polls 7 subreddits, scores posts, saves to Postgres, fires Discord webhooks
+2. **API Server** (`api-server.ts`) — Express on :3001, serves paginated/filtered alerts + keywords
 3. **React Dashboard** (`dashboard/`) — Vite + React 19 + Tailwind, polls API every 5s
 
 ## Pending Work Streams

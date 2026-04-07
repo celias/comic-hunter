@@ -17,7 +17,7 @@ Create a quick test script to verify Comic Vine API connectivity and response fo
 
 **Generate a test script that:**
 
-1. Uses the project's existing API patterns from [extract-comic-vine-keywords.js](../../extract-comic-vine-keywords.js)
+1. Uses the project's existing API patterns from [extract-comic-vine-keywords.ts](../../extract-comic-vine-keywords.ts)
 2. Includes proper rate limiting (20-second delays)
 3. Handles authentication with environment variables
 4. Implements comprehensive error handling

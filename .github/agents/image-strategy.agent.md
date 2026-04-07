@@ -1,7 +1,7 @@
 ---
 description: "Use when implementing or reviewing alert image handling across ingestion, API contracts, dashboard rendering, and Discord embeds, including safe fallback-enrichment planning."
 tools: [read, search, edit, execute, agent]
-model: ["Claude Sonnet 4", "GPT-5.3-Codex"]
+model: ["claude-sonnet-4-6"]
 argument-hint: "What image behavior should we implement or debug?"
 ---
 

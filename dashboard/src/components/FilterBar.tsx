@@ -1,14 +1,5 @@
 import type { Filters } from "../types.ts";
-
-const SUBREDDITS = [
-  "comicswap",
-  "comicbooks",
-  "phillycollectors",
-  "newjersey",
-  "free",
-  "whatsthiscomicbook",
-  "comicbookcollecting",
-];
+import { SUBREDDITS } from "../../../lib/subreddits.ts";
 
 interface FilterBarProps {
   filters: Filters;

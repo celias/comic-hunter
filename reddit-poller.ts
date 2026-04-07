@@ -13,19 +13,8 @@
 import { config } from "./lib/config.ts";
 import { prisma } from "./lib/prisma.ts";
 import { KEYWORDS } from "./lib/keywords.ts";
-
-// ─── Subreddits to watch ─────────────────────────────────────────────────────
-// Each gets its own JSON feed polled on a staggered schedule.
-
-const SUBREDDITS = [
-  "comicswap",
-  "comicbooks",
-  "phillycollectors",
-  "newjersey",
-  "free",
-  "whatsthiscomicbook",
-  "comicbookcollecting",
-];
+import { log } from "./lib/logger.ts";
+import { SUBREDDITS } from "./lib/subreddits.ts";
 
 // Stagger: 10s between each sub's loop start = 12 subs spread over 2 min.
 // Poll: each sub checked every 5 minutes — well within Reddit's rate limits.
@@ -391,13 +380,6 @@ async function sendDiscordAlert(
   });
 
   if (!res.ok) throw new Error(`Discord HTTP ${res.status}`);
-}
-
-// ─── Logging ──────────────────────────────────────────────────────────────────
-
-function log(level: string, msg: string): void {
-  const ts = new Date().toISOString().replace("T", " ").slice(0, 19);
-  console.log(`${ts} [${level.toUpperCase().padEnd(5)}] ${msg}`);
 }
 
 // ─── Per-subreddit Poll Loop ──────────────────────────────────────────────────

@@ -1,16 +1,45 @@
-# React + Vite
+# Comic Hunter Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React dashboard for monitoring comic alerts collected by the Comic Hunter poller.
 
-Currently, two official plugins are available:
+## What it does
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Displays alerts scored and saved by `reddit-poller.ts` in real time
+- Polls `/api/alerts` every 5 seconds for new alerts using an incremental `since` cursor
+- Filters by subreddit, minimum score, and local-only (Philly/NJ geo subs)
+- Shows per-alert score badge, image (or placeholder), eBay flip value when available
+- Sidebar displays keyword weight maps from `/api/keywords`
 
-## React Compiler
+## Running locally
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The dashboard depends on the API server running on port 3001.
 
-## Expanding the ESLint configuration
+```bash
+# From the repo root — starts both API server and dashboard
+npm run dev:manual
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Or start just the dashboard (requires API server already running)
+cd dashboard
+npm run dev
+```
+
+Dashboard runs at http://localhost:5173. API is proxied through Vite to http://localhost:3001.
+
+## Build
+
+```bash
+cd dashboard
+npm run build
+```
+
+Output goes to `dashboard/dist/`.
+
+## Key components
+
+| Component | Purpose |
+|-----------|---------|
+| `App.tsx` | Root — fetches alerts and keywords, owns filter state |
+| `FilterBar.tsx` | Subreddit / score / local-only filters |
+| `AlertCard.tsx` | Single alert row with score badge and image |
+| `ScoreBadge.tsx` | Color-coded score indicator |
+| `KeywordPanel.tsx` | Sidebar keyword weight display |

@@ -10,5 +10,5 @@
     "allowImportingTsExtensions": true,
     "isolatedModules": true
   },
-  "include": ["src"]
+  "include": ["src", "../lib/subreddits.ts"]
 }
