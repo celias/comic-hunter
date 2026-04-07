@@ -9,13 +9,15 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v4.2.2
+      - uses: actions/setup-node@v4.4.0
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
       - run: npm ci
       - run: npx prisma generate
+        env:
+          DATABASE_URL: postgresql://placeholder:placeholder@localhost/placeholder
       - run: npm run lint
       - run: npm run format:check
       - run: npx tsc --noEmit
