@@ -17,6 +17,7 @@ jobs:
       - run: npm ci
       - run: npx prisma generate
         env:
+          # TODO: replace with ${{ secrets.DATABASE_URL }} when integration tests land
           DATABASE_URL: postgresql://placeholder:placeholder@localhost/placeholder
       - run: npm run lint
       - run: npm run format:check
