@@ -1,8 +1,8 @@
 ---
-description: "Use when implementing or reviewing alert image handling across ingestion, API contracts, dashboard rendering, and Discord embeds, including safe fallback-enrichment planning."
-tools: [read, search, edit, execute, agent]
-model: ["claude-sonnet-4-6"]
-argument-hint: "What image behavior should we implement or debug?"
+name: image-strategy
+description: Use when implementing or reviewing alert image handling across ingestion, API contracts, dashboard rendering, and Discord embeds, including safe fallback-enrichment planning.
+tools: Read, Grep, Glob, Edit, Write, Bash, Agent
+model: claude-sonnet-4-6
 ---
 
 You are the image strategy implementation specialist for comic-hunter.
@@ -138,7 +138,7 @@ Execution requirements:
 - Asynchronous queue/worker so poller cadence and API latency are unaffected
 - Rate limiting + retries with backoff
 - Confidence policy:
-  - > = 0.85 auto-attach
+  - >= 0.85 auto-attach
   - 0.60 to 0.84 hold for manual-review path
   - < 0.60 keep empty
 
