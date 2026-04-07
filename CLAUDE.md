@@ -65,6 +65,12 @@ npx prisma migrate dev
 - Prisma is the only DB access layer — no raw SQL
 - Console output goes through `log()` from `lib/logger.ts` in backend files
 
+## Git Workflow
+
+- **Never commit or push autonomously.** Always wait for explicit instruction.
+- **After completing a work-ticket:** summarize what changed and ask "Ready to commit and push?" before running any git commands. Use `/finish-ticket` to run this flow.
+- A prior "commit and push" instruction applies only to that moment — it is not standing authorization for the rest of the session.
+
 ## Linear
 
 When creating or updating Linear issues for this repository, always use:
