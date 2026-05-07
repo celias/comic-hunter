@@ -11,24 +11,24 @@
     />
     <style>
       :root {
-        --color-bg: #14181C;
+        --color-bg: #14181c;
         --color-surface: #1f2832;
         --color-surface-container: #283038;
         --color-surface-container-high: #2c3540;
         --color-surface-container-highest: #344050;
-        --color-primary: #40BCF4;
-        --color-primary-container: #209CE4;
-        --color-secondary: #00E054;
-        --color-secondary-container: #00AC1C;
-        --color-tertiary: #FF8000;
+        --color-primary: #40bcf4;
+        --color-primary-container: #209ce4;
+        --color-secondary: #00e054;
+        --color-secondary-container: #00ac1c;
+        --color-tertiary: #ff8000;
         --color-on-surface: #abc;
         --color-on-surface-muted: #678;
         --color-outline: #456;
-        --color-outline-variant: #2C3440;
+        --color-outline-variant: #2c3440;
       }
 
       * {
-        font-family: 'Sora', sans-serif;
+        font-family: "Sora", sans-serif;
       }
 
       ::-webkit-scrollbar {
@@ -57,7 +57,15 @@
       }
 
       .logo {
-        font-family: GraphikWeb, -apple-system, system-ui, 'Segoe UI', 'Hiragino Sans', Meiryo, sans-serif, ColorEmoji;
+        font-family:
+          GraphikWeb,
+          -apple-system,
+          system-ui,
+          "Segoe UI",
+          "Hiragino Sans",
+          Meiryo,
+          sans-serif,
+          ColorEmoji;
         font-weight: 400;
         font-size: 24px;
         line-height: 24px;
@@ -67,7 +75,9 @@
 
       .nav-link {
         color: var(--color-on-surface-muted);
-        transition: color 0.15s ease, background 0.15s ease;
+        transition:
+          color 0.15s ease,
+          background 0.15s ease;
         border-radius: 4px;
         border: 1px solid transparent;
         padding: 6px 12px;
@@ -86,7 +96,9 @@
         font-size: 0.875rem;
         color: var(--color-on-surface);
         width: 100%;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        transition:
+          border-color 0.15s ease,
+          box-shadow 0.15s ease;
       }
       .search-input::placeholder {
         color: var(--color-on-surface-muted);
@@ -124,7 +136,10 @@
         cursor: pointer;
         background: var(--color-surface-container);
         border: 1px solid rgba(255, 45, 120, 0.3);
-        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease,
+          border-color 0.15s ease;
       }
       .comic-card img {
         object-fit: cover;
@@ -135,7 +150,9 @@
         transform: scale(1.04);
         z-index: 10;
         border-color: rgba(255, 45, 120, 0.5);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 16px rgba(255, 45, 120, 0.2);
+        box-shadow:
+          0 8px 24px rgba(0, 0, 0, 0.7),
+          0 0 16px rgba(255, 45, 120, 0.2);
       }
 
       .quick-view-btn {
@@ -181,10 +198,22 @@
         border-radius: 3px;
         color: #000;
       }
-      .score-top    { background: var(--color-secondary); color: #000; }
-      .score-high   { background: var(--color-primary);   color: #fff; }
-      .score-mid    { background: var(--color-tertiary);  color: #000; }
-      .score-low    { background: var(--color-on-surface-muted); color: #000; }
+      .score-top {
+        background: var(--color-secondary);
+        color: #000;
+      }
+      .score-high {
+        background: var(--color-primary);
+        color: #fff;
+      }
+      .score-mid {
+        background: var(--color-tertiary);
+        color: #000;
+      }
+      .score-low {
+        background: var(--color-on-surface-muted);
+        color: #000;
+      }
     </style>
   </head>
   <body>
@@ -223,43 +252,228 @@
 
     <script>
       const comics = [
-        { title: "BATMAN",              sub: "r/DCcomics",     score: 9.5, img: "https://placehold.co/200x300/1a1a2e/fff?text=BATMAN" },
-        { title: "BATMAN",              sub: "r/comicswap",    score: 8.8, img: "https://placehold.co/200x300/16213e/fff?text=BATMAN" },
-        { title: "X-MEN",               sub: "r/Marvel",       score: 9.2, img: "https://placehold.co/200x300/0f3460/fff?text=X-MEN" },
-        { title: "SANDMAN",             sub: "r/Sandman",      score: 9.8, img: "https://placehold.co/200x300/1b1b2f/fff?text=SANDMAN" },
-        { title: "WATCHMEN",            sub: "r/DCcomics",     score: 9.9, img: "https://placehold.co/200x300/2d132c/fff?text=WATCHMEN" },
-        { title: "SPIDER-MAN",          sub: "r/Marvel",       score: 9.1, img: "https://placehold.co/200x300/c72c41/fff?text=SPIDER-MAN" },
-        { title: "SPIDER-MAN",          sub: "r/comicswap",    score: 8.5, img: "https://placehold.co/200x300/801336/fff?text=SPIDER-MAN" },
-        { title: "Y THE LAST MAN",      sub: "r/comicbooks",   score: 9.3, img: "https://placehold.co/200x300/1b4332/fff?text=Y+LAST+MAN" },
-        { title: "FABLES",              sub: "r/comicbooks",   score: 8.9, img: "https://placehold.co/200x300/5c4033/fff?text=FABLES" },
-        { title: "WALKING DEAD",        sub: "r/TWD",          score: 9.0, img: "https://placehold.co/200x300/212121/fff?text=WALKING+DEAD" },
-        { title: "INVINCIBLE",          sub: "r/Invincible",   score: 9.4, img: "https://placehold.co/200x300/ff6b35/fff?text=INVINCIBLE" },
-        { title: "INVINCIBLE",          sub: "r/comicswap",    score: 8.7, img: "https://placehold.co/200x300/f7c59f/333?text=INVINCIBLE" },
-        { title: "SAGA",                sub: "r/SagaComics",   score: 9.7, img: "https://placehold.co/200x300/2b2d42/fff?text=SAGA" },
-        { title: "MONSTRESS",           sub: "r/comicbooks",   score: 9.6, img: "https://placehold.co/200x300/4a1942/fff?text=MONSTRESS" },
-        { title: "LAZARUS",             sub: "r/ImageComics",  score: 8.6, img: "https://placehold.co/200x300/1d3557/fff?text=LAZARUS" },
-        { title: "DEATHSTROKE",         sub: "r/DCcomics",     score: 8.3, img: "https://placehold.co/200x300/e63946/fff?text=DEATHSTROKE" },
-        { title: "SOMETHING IS KILLING",sub: "r/ImageComics",  score: 8.9, img: "https://placehold.co/200x300/6d2b3d/fff?text=SIK" },
-        { title: "HELLBOY",             sub: "r/DarkHorse",    score: 9.0, img: "https://placehold.co/200x300/7b2d00/fff?text=HELLBOY" },
-        { title: "BLACK HAMMER",        sub: "r/DarkHorse",    score: 8.8, img: "https://placehold.co/200x300/3d405b/fff?text=BLACK+HAMMER" },
-        { title: "WICKED + DIVINE",     sub: "r/WicDiv",       score: 9.1, img: "https://placehold.co/200x300/9b2335/fff?text=WICKED" },
-        { title: "EAST OF WEST",        sub: "r/ImageComics",  score: 8.9, img: "https://placehold.co/200x300/1c1c1c/fff?text=EAST+OF+WEST" },
-        { title: "GIDEON FALLS",        sub: "r/ImageComics",  score: 8.7, img: "https://placehold.co/200x300/2c3e50/fff?text=GIDEON+FALLS" },
-        { title: "KILL OR BE KILLED",   sub: "r/ImageComics",  score: 8.5, img: "https://placehold.co/200x300/4a0000/fff?text=KOBK" },
-        { title: "SOUTHERN BASTARDS",   sub: "r/ImageComics",  score: 8.6, img: "https://placehold.co/200x300/5d4e37/fff?text=S+BASTARDS" },
-        { title: "BITCH PLANET",        sub: "r/ImageComics",  score: 8.8, img: "https://placehold.co/200x300/b5451b/fff?text=BITCH+PLANET" },
-        { title: "SEX CRIMINALS",       sub: "r/ImageComics",  score: 8.4, img: "https://placehold.co/200x300/c41e3a/fff?text=SEX+CRIMINALS" },
-        { title: "INJECTION",           sub: "r/ImageComics",  score: 8.3, img: "https://placehold.co/200x300/1a3c34/fff?text=INJECTION" },
-        { title: "DEPT OF TRUTH",       sub: "r/ImageComics",  score: 9.0, img: "https://placehold.co/200x300/232931/fff?text=DEPT+TRUTH" },
-        { title: "ONCE & FUTURE",       sub: "r/BOOM",         score: 8.7, img: "https://placehold.co/200x300/3d2b1f/fff?text=ONCE+FUTURE" },
-        { title: "DIE",                 sub: "r/ImageComics",  score: 8.9, img: "https://placehold.co/200x300/2d1b69/fff?text=DIE" },
-        { title: "ICE CREAM MAN",       sub: "r/ImageComics",  score: 8.6, img: "https://placehold.co/200x300/f4a261/333?text=ICE+CREAM+MAN" },
-        { title: "PAPER GIRLS",         sub: "r/ImageComics",  score: 9.2, img: "https://placehold.co/200x300/0077b6/fff?text=PAPER+GIRLS" },
-        { title: "LOW",                 sub: "r/ImageComics",  score: 8.5, img: "https://placehold.co/200x300/006994/fff?text=LOW" },
-        { title: "BLACK SCIENCE",       sub: "r/ImageComics",  score: 8.8, img: "https://placehold.co/200x300/1b2838/fff?text=BLACK+SCIENCE" },
-        { title: "DEADLY CLASS",        sub: "r/ImageComics",  score: 9.1, img: "https://placehold.co/200x300/2d0a0a/fff?text=DEADLY+CLASS" },
-        { title: "OLD GUARD",           sub: "r/ImageComics",  score: 8.9, img: "https://placehold.co/200x300/3b3b3b/fff?text=OLD+GUARD" },
-        { title: "WYTHES",              sub: "r/ImageComics",  score: 8.4, img: "https://placehold.co/200x300/2e4057/fff?text=WYTHES" },
+        {
+          title: "BATMAN",
+          sub: "r/DCcomics",
+          score: 9.5,
+          img: "https://placehold.co/200x300/1a1a2e/fff?text=BATMAN",
+        },
+        {
+          title: "BATMAN",
+          sub: "r/comicswap",
+          score: 8.8,
+          img: "https://placehold.co/200x300/16213e/fff?text=BATMAN",
+        },
+        {
+          title: "X-MEN",
+          sub: "r/Marvel",
+          score: 9.2,
+          img: "https://placehold.co/200x300/0f3460/fff?text=X-MEN",
+        },
+        {
+          title: "SANDMAN",
+          sub: "r/Sandman",
+          score: 9.8,
+          img: "https://placehold.co/200x300/1b1b2f/fff?text=SANDMAN",
+        },
+        {
+          title: "WATCHMEN",
+          sub: "r/DCcomics",
+          score: 9.9,
+          img: "https://placehold.co/200x300/2d132c/fff?text=WATCHMEN",
+        },
+        {
+          title: "SPIDER-MAN",
+          sub: "r/Marvel",
+          score: 9.1,
+          img: "https://placehold.co/200x300/c72c41/fff?text=SPIDER-MAN",
+        },
+        {
+          title: "SPIDER-MAN",
+          sub: "r/comicswap",
+          score: 8.5,
+          img: "https://placehold.co/200x300/801336/fff?text=SPIDER-MAN",
+        },
+        {
+          title: "Y THE LAST MAN",
+          sub: "r/comicbooks",
+          score: 9.3,
+          img: "https://placehold.co/200x300/1b4332/fff?text=Y+LAST+MAN",
+        },
+        {
+          title: "FABLES",
+          sub: "r/comicbooks",
+          score: 8.9,
+          img: "https://placehold.co/200x300/5c4033/fff?text=FABLES",
+        },
+        {
+          title: "WALKING DEAD",
+          sub: "r/TWD",
+          score: 9.0,
+          img: "https://placehold.co/200x300/212121/fff?text=WALKING+DEAD",
+        },
+        {
+          title: "INVINCIBLE",
+          sub: "r/Invincible",
+          score: 9.4,
+          img: "https://placehold.co/200x300/ff6b35/fff?text=INVINCIBLE",
+        },
+        {
+          title: "INVINCIBLE",
+          sub: "r/comicswap",
+          score: 8.7,
+          img: "https://placehold.co/200x300/f7c59f/333?text=INVINCIBLE",
+        },
+        {
+          title: "SAGA",
+          sub: "r/SagaComics",
+          score: 9.7,
+          img: "https://placehold.co/200x300/2b2d42/fff?text=SAGA",
+        },
+        {
+          title: "MONSTRESS",
+          sub: "r/comicbooks",
+          score: 9.6,
+          img: "https://placehold.co/200x300/4a1942/fff?text=MONSTRESS",
+        },
+        {
+          title: "LAZARUS",
+          sub: "r/ImageComics",
+          score: 8.6,
+          img: "https://placehold.co/200x300/1d3557/fff?text=LAZARUS",
+        },
+        {
+          title: "DEATHSTROKE",
+          sub: "r/DCcomics",
+          score: 8.3,
+          img: "https://placehold.co/200x300/e63946/fff?text=DEATHSTROKE",
+        },
+        {
+          title: "SOMETHING IS KILLING",
+          sub: "r/ImageComics",
+          score: 8.9,
+          img: "https://placehold.co/200x300/6d2b3d/fff?text=SIK",
+        },
+        {
+          title: "HELLBOY",
+          sub: "r/DarkHorse",
+          score: 9.0,
+          img: "https://placehold.co/200x300/7b2d00/fff?text=HELLBOY",
+        },
+        {
+          title: "BLACK HAMMER",
+          sub: "r/DarkHorse",
+          score: 8.8,
+          img: "https://placehold.co/200x300/3d405b/fff?text=BLACK+HAMMER",
+        },
+        {
+          title: "WICKED + DIVINE",
+          sub: "r/WicDiv",
+          score: 9.1,
+          img: "https://placehold.co/200x300/9b2335/fff?text=WICKED",
+        },
+        {
+          title: "EAST OF WEST",
+          sub: "r/ImageComics",
+          score: 8.9,
+          img: "https://placehold.co/200x300/1c1c1c/fff?text=EAST+OF+WEST",
+        },
+        {
+          title: "GIDEON FALLS",
+          sub: "r/ImageComics",
+          score: 8.7,
+          img: "https://placehold.co/200x300/2c3e50/fff?text=GIDEON+FALLS",
+        },
+        {
+          title: "KILL OR BE KILLED",
+          sub: "r/ImageComics",
+          score: 8.5,
+          img: "https://placehold.co/200x300/4a0000/fff?text=KOBK",
+        },
+        {
+          title: "SOUTHERN BASTARDS",
+          sub: "r/ImageComics",
+          score: 8.6,
+          img: "https://placehold.co/200x300/5d4e37/fff?text=S+BASTARDS",
+        },
+        {
+          title: "BITCH PLANET",
+          sub: "r/ImageComics",
+          score: 8.8,
+          img: "https://placehold.co/200x300/b5451b/fff?text=BITCH+PLANET",
+        },
+        {
+          title: "SEX CRIMINALS",
+          sub: "r/ImageComics",
+          score: 8.4,
+          img: "https://placehold.co/200x300/c41e3a/fff?text=SEX+CRIMINALS",
+        },
+        {
+          title: "INJECTION",
+          sub: "r/ImageComics",
+          score: 8.3,
+          img: "https://placehold.co/200x300/1a3c34/fff?text=INJECTION",
+        },
+        {
+          title: "DEPT OF TRUTH",
+          sub: "r/ImageComics",
+          score: 9.0,
+          img: "https://placehold.co/200x300/232931/fff?text=DEPT+TRUTH",
+        },
+        {
+          title: "ONCE & FUTURE",
+          sub: "r/BOOM",
+          score: 8.7,
+          img: "https://placehold.co/200x300/3d2b1f/fff?text=ONCE+FUTURE",
+        },
+        {
+          title: "DIE",
+          sub: "r/ImageComics",
+          score: 8.9,
+          img: "https://placehold.co/200x300/2d1b69/fff?text=DIE",
+        },
+        {
+          title: "ICE CREAM MAN",
+          sub: "r/ImageComics",
+          score: 8.6,
+          img: "https://placehold.co/200x300/f4a261/333?text=ICE+CREAM+MAN",
+        },
+        {
+          title: "PAPER GIRLS",
+          sub: "r/ImageComics",
+          score: 9.2,
+          img: "https://placehold.co/200x300/0077b6/fff?text=PAPER+GIRLS",
+        },
+        {
+          title: "LOW",
+          sub: "r/ImageComics",
+          score: 8.5,
+          img: "https://placehold.co/200x300/006994/fff?text=LOW",
+        },
+        {
+          title: "BLACK SCIENCE",
+          sub: "r/ImageComics",
+          score: 8.8,
+          img: "https://placehold.co/200x300/1b2838/fff?text=BLACK+SCIENCE",
+        },
+        {
+          title: "DEADLY CLASS",
+          sub: "r/ImageComics",
+          score: 9.1,
+          img: "https://placehold.co/200x300/2d0a0a/fff?text=DEADLY+CLASS",
+        },
+        {
+          title: "OLD GUARD",
+          sub: "r/ImageComics",
+          score: 8.9,
+          img: "https://placehold.co/200x300/3b3b3b/fff?text=OLD+GUARD",
+        },
+        {
+          title: "WYTHES",
+          sub: "r/ImageComics",
+          score: 8.4,
+          img: "https://placehold.co/200x300/2e4057/fff?text=WYTHES",
+        },
       ];
 
       function scoreBadgeClass(s) {
