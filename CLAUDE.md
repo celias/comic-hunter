@@ -65,6 +65,11 @@ npx prisma migrate dev
 - Prisma is the only DB access layer — no raw SQL
 - Console output goes through `log()` from `lib/logger.ts` in backend files
 
+## CI & Formatting
+
+- CI runs `prettier --check .` on all files — lint-staged must cover every file type committed to the repo.
+- When introducing a new file type (e.g. `.html`, `.css`, `.yaml`), add a matching glob to the `lint-staged` config in `package.json` before committing.
+
 ## Git Workflow
 
 - **Never commit or push autonomously.** Always wait for explicit instruction.

@@ -1,5 +1,11 @@
 # Lessons Learned
 
+### 2026-05-07: CI format check failed on HTML files
+
+**What happened:** Pushing new HTML files caused CI's `prettier --check` to fail because lint-staged wasn't configured to format `.html` files before commit.
+**Why:** The lint-staged config only covered `*.{ts,tsx}` and `*.{js,jsx,json,md}`, creating a gap between what the pre-commit hook validates and what CI checks (`prettier --check .` runs on all files).
+**Rule going forward:** When introducing a new file type to the repo, verify it is covered by lint-staged. If CI runs `prettier --check .`, lint-staged must include a matching glob.
+
 ### 2026-04-07: Treating a one-time commit instruction as standing authorization
 
 **What happened:** After completing GAB-19, I continued committing and pushing follow-up changes throughout the session without being asked, including small fixes and a TODO comment.
