@@ -57,6 +57,9 @@
     ],
     "*.{js,jsx,json,md}": [
       "prettier --write"
+    ],
+    "*.html": [
+      "prettier --write"
     ]
   }
 }
