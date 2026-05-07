@@ -14,4 +14,17 @@ Then append a new entry to LESSONS.md in this format:
 **Why:** [root cause]
 **Rule going forward:** [concrete, enforceable rule]
 
-After adding the entry, check if this lesson should also become a rule in CLAUDE.md. If so, suggest the update.
+After adding the entry, decide where the rule belongs:
+
+- **CLAUDE.md** — if it's a project-wide rule (coding conventions, workflow, architecture)
+- **Memory** — if it's a collaboration behavior (how we work together, communication patterns)
+- **Both** — if it applies to both
+- **Neither** — if it's context-specific enough that LESSONS.md is sufficient
+
+For each candidate destination, explain:
+
+1. What the rule would say
+2. How it would affect the project — what behaviors or decisions it would change going forward
+3. How it would affect AI workflows — which skills, commands, or Claude behaviors it would alter, and whether it could have unintended side effects on other parts of the workflow
+
+Then ask the user to confirm before writing anything.

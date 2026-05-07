@@ -1,3 +1,4 @@
+import { useState } from "react";
 import ScoreBadge from "./ScoreBadge.tsx";
 import type { SerializedAlert } from "../types.ts";
 
@@ -23,13 +24,24 @@ export default function AlertRow({
   isExpanded,
   onToggle,
 }: AlertRowProps) {
+  const [hovered, setHovered] = useState(false);
+
+  const rowStyle: React.CSSProperties = {
+    background: isExpanded
+      ? "var(--color-surface-container-high)"
+      : "var(--color-surface-container)",
+    border: `1px solid ${hovered || isExpanded ? "var(--color-primary)" : "rgba(255, 45, 120, 0.3)"}`,
+    borderRadius: "4px",
+    transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+    boxShadow:
+      hovered || isExpanded ? "0 0 12px rgba(255, 45, 120, 0.15)" : "none",
+  };
+
   return (
     <div
-      className={`border rounded-lg transition-colors ${
-        isExpanded
-          ? "bg-gray-800/70 border-gray-700"
-          : "bg-gray-900 border-gray-800 hover:bg-gray-800/50"
-      }`}
+      style={rowStyle}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       <button
         onClick={onToggle}
@@ -41,14 +53,17 @@ export default function AlertRow({
             <img
               src={alert.imageUrl}
               alt="Comic thumbnail"
-              className="w-full h-full object-cover rounded border border-gray-700"
+              className="w-full h-full object-cover"
+              style={{
+                borderRadius: "4px",
+                border: "1px solid var(--color-outline)",
+              }}
               onError={(e) => {
-                // Fallback to placeholder on error
                 const target = e.target as HTMLImageElement;
                 target.style.display = "none";
                 target.parentElement!.innerHTML = `
-                  <div class="w-full h-full flex items-center justify-center bg-gray-800 border border-gray-700 rounded">
-                    <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                  <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--color-surface);border:1px solid var(--color-outline);border-radius:4px">
+                    <svg width="20" height="20" fill="var(--color-outline)" viewBox="0 0 20 20">
                       <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
                     </svg>
                   </div>
@@ -56,33 +71,51 @@ export default function AlertRow({
               }}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gray-800 border border-gray-700 rounded relative">
-              <div className="text-center px-1">
-                <div className="bg-white rounded-full px-2 py-1 mb-1">
-                  <span className="text-xs text-black font-bold">💭</span>
-                </div>
-                <div className="text-[8px] text-gray-400 leading-tight">
-                  Sorry,
-                  <br />
-                  no image
-                </div>
-              </div>
+            <div
+              className="w-full h-full flex items-center justify-center"
+              style={{
+                background: "var(--color-surface)",
+                border: "1px solid var(--color-outline)",
+                borderRadius: "4px",
+              }}
+            >
+              <span style={{ fontSize: "18px" }}>💭</span>
             </div>
           )}
         </div>
 
         <ScoreBadge score={alert.score} />
+
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-gray-100 truncate">
+          <p
+            className="text-sm font-medium truncate"
+            style={{ color: "var(--color-on-surface)" }}
+          >
             {alert.title}
           </p>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <p
+            className="text-xs mt-0.5"
+            style={{
+              fontFamily: "Space Grotesk, sans-serif",
+              color: "var(--color-on-surface-muted)",
+            }}
+          >
             r/{alert.subreddit} &middot; {alert.author} &middot;{" "}
             {timeAgo(alert.seenAt)}
           </p>
         </div>
+
         {alert.isLocal && (
-          <span className="text-xs bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded-full border border-blue-800 shrink-0">
+          <span
+            className="text-xs px-2 py-0.5 shrink-0"
+            style={{
+              fontFamily: "Space Grotesk, sans-serif",
+              background: "var(--color-secondary-container)",
+              color: "var(--color-secondary)",
+              border: "1px solid rgba(0, 255, 204, 0.4)",
+              borderRadius: "4px",
+            }}
+          >
             Local
           </span>
         )}

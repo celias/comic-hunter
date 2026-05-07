@@ -1,1 +1,44 @@
 @import "tailwindcss";
+
+:root {
+  --color-bg: #0a0a12;
+  --color-surface: #0f0f1a;
+  --color-surface-container: #141422;
+  --color-surface-container-high: #1e1e30;
+  --color-surface-container-highest: #28283e;
+  --color-primary: #ff2d78;
+  --color-primary-container: #b3004e;
+  --color-secondary: #00ffcc;
+  --color-secondary-container: #004d3d;
+  --color-tertiary: #ffe04a;
+  --color-on-surface: #e8e0f0;
+  --color-on-surface-muted: #a098b0;
+  --color-outline: #5a5068;
+  --color-outline-variant: #302840;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-on-surface);
+  font-family: Inter, sans-serif;
+  min-height: 100vh;
+}
+
+/* Neon glow utilities */
+.glow-pink {
+  text-shadow: 0 0 8px var(--color-primary);
+}
+
+.glow-border-pink {
+  border-color: rgba(255, 45, 120, 0.5);
+  box-shadow: inset 0 0 12px rgba(255, 45, 120, 0.1);
+}
+
+.glow-box-pink {
+  box-shadow: 0 0 16px rgba(255, 45, 120, 0.4);
+}
+
+.glow-border-pink-full {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 12px rgba(255, 45, 120, 0.25);
+}

@@ -53,3 +53,6 @@ export interface KeywordsResponse {
 
 /** Merged keyword weights map (content + location combined). */
 export type WeightsMap = Record<string, number>;
+
+/** Dashboard display mode — list (compact rows) or grid (cover cards). */
+export type ViewMode = "list" | "grid";

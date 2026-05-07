@@ -5,12 +5,32 @@ function formatDate(dateStr: string): string {
   return new Date(dateStr).toLocaleString();
 }
 
-function weightStyle(weight: number): string {
+function chipStyle(weight: number): React.CSSProperties {
   if (weight >= 8)
-    return "bg-red-900/60 text-red-200 border-red-700 font-semibold";
-  if (weight >= 5) return "bg-yellow-900/40 text-yellow-200 border-yellow-700";
-  return "bg-gray-800 text-gray-300 border-gray-700";
+    return {
+      background: "rgba(255,45,120,0.15)",
+      color: "#ff2d78",
+      borderColor: "rgba(255,45,120,0.5)",
+      fontWeight: 600,
+    };
+  if (weight >= 5)
+    return {
+      background: "rgba(255,224,74,0.12)",
+      color: "#ffe04a",
+      borderColor: "rgba(255,224,74,0.4)",
+    };
+  return {
+    background: "rgba(90,80,104,0.15)",
+    color: "var(--color-on-surface-muted)",
+    borderColor: "var(--color-outline)",
+  };
 }
+
+const metaLabelStyle: React.CSSProperties = {
+  fontFamily: "Space Grotesk, sans-serif",
+  color: "var(--color-on-surface-muted)",
+  fontSize: "0.75rem",
+};
 
 interface AlertDetailProps {
   alert: SerializedAlert;
@@ -32,65 +52,88 @@ export default function AlertDetail({ alert, weights }: AlertDetailProps) {
 
   return (
     <div className="px-4 pb-4 pt-2 space-y-3 text-sm">
-      {/* Image preview */}
       {alert.imageUrl && (
         <div className="flex justify-center">
           <img
             src={alert.imageUrl}
             alt="Comic preview"
-            className="max-w-sm max-h-64 object-contain rounded border border-gray-700"
+            className="max-w-sm max-h-64 object-contain"
+            style={{
+              borderRadius: "4px",
+              border: "1px solid var(--color-outline)",
+            }}
             onError={(e) => {
-              // Hide on error, don't show broken image icon
-              const target = e.target as HTMLImageElement;
-              target.style.display = "none";
+              (e.target as HTMLImageElement).style.display = "none";
             }}
           />
         </div>
       )}
 
       {alert.body && (
-        <div className="bg-gray-950 rounded p-3 text-gray-300 whitespace-pre-wrap break-words max-h-60 overflow-y-auto border border-gray-800">
+        <div
+          className="rounded p-3 whitespace-pre-wrap break-words max-h-60 overflow-y-auto"
+          style={{
+            background: "var(--color-bg)",
+            color: "var(--color-on-surface)",
+            border: "1px solid var(--color-outline-variant)",
+          }}
+        >
           {alert.body}
         </div>
       )}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-xs">
         <div>
-          <span className="text-gray-500">Score</span>
+          <span style={metaLabelStyle}>Score</span>
           <div className="mt-0.5">
             <ScoreBadge score={alert.score} />
           </div>
         </div>
         <div>
-          <span className="text-gray-500">Subreddit</span>
-          <p className="text-gray-300 mt-0.5">r/{alert.subreddit}</p>
+          <span style={metaLabelStyle}>Subreddit</span>
+          <p className="mt-0.5" style={{ color: "var(--color-on-surface)" }}>
+            r/{alert.subreddit}
+          </p>
         </div>
         <div>
-          <span className="text-gray-500">Author</span>
-          <p className="text-gray-300 mt-0.5">u/{alert.author}</p>
+          <span style={metaLabelStyle}>Author</span>
+          <p className="mt-0.5" style={{ color: "var(--color-on-surface)" }}>
+            u/{alert.author}
+          </p>
         </div>
         <div>
-          <span className="text-gray-500">Posted</span>
-          <p className="text-gray-300 mt-0.5">{formatDate(alert.postedAt)}</p>
+          <span style={metaLabelStyle}>Posted</span>
+          <p className="mt-0.5" style={{ color: "var(--color-on-surface)" }}>
+            {formatDate(alert.postedAt)}
+          </p>
         </div>
         <div>
-          <span className="text-gray-500">Seen</span>
-          <p className="text-gray-300 mt-0.5">{formatDate(alert.seenAt)}</p>
+          <span style={metaLabelStyle}>Seen</span>
+          <p className="mt-0.5" style={{ color: "var(--color-on-surface)" }}>
+            {formatDate(alert.seenAt)}
+          </p>
         </div>
         {alert.imageSource && (
           <div>
-            <span className="text-gray-500">Image Source</span>
-            <p className="text-gray-300 mt-0.5">{alert.imageSource}</p>
+            <span style={metaLabelStyle}>Image Source</span>
+            <p className="mt-0.5" style={{ color: "var(--color-on-surface)" }}>
+              {alert.imageSource}
+            </p>
           </div>
         )}
         {alert.isLocal && (
           <div>
-            <span className="text-gray-500">Location</span>
+            <span style={metaLabelStyle}>Location</span>
             <div className="flex flex-wrap gap-1 mt-0.5">
               {sortedLocation.map((kw) => (
                 <span
                   key={kw}
-                  className={`text-xs px-2 py-0.5 rounded border ${weightStyle(weights?.[kw] ?? 0)}`}
+                  className="text-xs px-2 py-0.5 border"
+                  style={{
+                    borderRadius: "4px",
+                    fontFamily: "Space Grotesk, sans-serif",
+                    ...chipStyle(weights?.[kw] ?? 0),
+                  }}
                 >
                   {kw}
                 </span>
@@ -102,14 +145,21 @@ export default function AlertDetail({ alert, weights }: AlertDetailProps) {
 
       {alert.matched.length > 0 && (
         <div>
-          <span className="text-xs text-gray-500">Matched Keywords</span>
+          <span className="text-xs" style={metaLabelStyle}>
+            Matched Keywords
+          </span>
           <div className="flex flex-wrap gap-1.5 mt-1">
             {sortedMatched.map((kw) => {
               const w = weights?.[kw] ?? 0;
               return (
                 <span
                   key={kw}
-                  className={`text-xs px-2 py-0.5 rounded border ${weightStyle(w)}`}
+                  className="text-xs px-2 py-0.5 border"
+                  style={{
+                    borderRadius: "4px",
+                    fontFamily: "Space Grotesk, sans-serif",
+                    ...chipStyle(w),
+                  }}
                 >
                   {kw}
                   {weights && w > 0 && (
@@ -123,31 +173,45 @@ export default function AlertDetail({ alert, weights }: AlertDetailProps) {
       )}
 
       {(alert.flipMinSold != null || alert.flipMinListed != null) && (
-        <div className="bg-amber-950/30 border border-amber-800/50 rounded p-3">
-          <span className="text-xs text-amber-400 font-medium">
+        <div
+          className="rounded p-3"
+          style={{
+            background: "rgba(255,224,74,0.06)",
+            border: "1px solid rgba(255,224,74,0.3)",
+          }}
+        >
+          <span
+            className="text-xs font-medium"
+            style={{
+              color: "var(--color-tertiary)",
+              fontFamily: "Space Grotesk, sans-serif",
+            }}
+          >
             eBay Flip Data
           </span>
           <div className="grid grid-cols-2 gap-2 mt-1.5 text-xs">
             {alert.flipSearchTerm && (
               <div className="col-span-2">
-                <span className="text-gray-500">Search: </span>
-                <span className="text-gray-300">{alert.flipSearchTerm}</span>
+                <span style={metaLabelStyle}>Search: </span>
+                <span style={{ color: "var(--color-on-surface)" }}>
+                  {alert.flipSearchTerm}
+                </span>
               </div>
             )}
             {alert.flipMinSold != null && (
               <div>
-                <span className="text-gray-500">Sold: </span>
-                <span className="text-green-400">
-                  ${alert.flipMinSold.toFixed(2)} - $
+                <span style={metaLabelStyle}>Sold: </span>
+                <span style={{ color: "var(--color-secondary)" }}>
+                  ${alert.flipMinSold.toFixed(2)} – $
                   {alert.flipMaxSold?.toFixed(2)}
                 </span>
               </div>
             )}
             {alert.flipMinListed != null && (
               <div>
-                <span className="text-gray-500">Listed: </span>
-                <span className="text-gray-300">
-                  ${alert.flipMinListed.toFixed(2)} - $
+                <span style={metaLabelStyle}>Listed: </span>
+                <span style={{ color: "var(--color-on-surface)" }}>
+                  ${alert.flipMinListed.toFixed(2)} – $
                   {alert.flipMaxListed?.toFixed(2)}
                 </span>
               </div>
@@ -156,12 +220,26 @@ export default function AlertDetail({ alert, weights }: AlertDetailProps) {
         </div>
       )}
 
-      <div className="pt-2 border-t border-gray-800">
+      <div
+        className="pt-2"
+        style={{ borderTop: "1px solid var(--color-outline-variant)" }}
+      >
         <a
           href={alert.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-400 hover:text-blue-300 text-xs underline"
+          className="text-xs underline transition-all"
+          style={{
+            color: "var(--color-secondary)",
+            fontFamily: "Space Grotesk, sans-serif",
+          }}
+          onMouseEnter={(e) => {
+            (e.target as HTMLElement).style.textShadow =
+              "0 0 8px var(--color-secondary)";
+          }}
+          onMouseLeave={(e) => {
+            (e.target as HTMLElement).style.textShadow = "none";
+          }}
         >
           View on Reddit →
         </a>

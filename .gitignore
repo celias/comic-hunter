@@ -19,6 +19,7 @@ build/
 /generated/prisma/
 
 # Environment and secrets
+.mcp.json
 .env
 .env.local
 .env.production
