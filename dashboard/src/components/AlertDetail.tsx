@@ -172,54 +172,6 @@ export default function AlertDetail({ alert, weights }: AlertDetailProps) {
         </div>
       )}
 
-      {(alert.flipMinSold != null || alert.flipMinListed != null) && (
-        <div
-          className="rounded p-3"
-          style={{
-            background: "rgba(255,224,74,0.06)",
-            border: "1px solid rgba(255,224,74,0.3)",
-          }}
-        >
-          <span
-            className="text-xs font-medium"
-            style={{
-              color: "var(--color-tertiary)",
-              fontFamily: "Space Grotesk, sans-serif",
-            }}
-          >
-            eBay Flip Data
-          </span>
-          <div className="grid grid-cols-2 gap-2 mt-1.5 text-xs">
-            {alert.flipSearchTerm && (
-              <div className="col-span-2">
-                <span style={metaLabelStyle}>Search: </span>
-                <span style={{ color: "var(--color-on-surface)" }}>
-                  {alert.flipSearchTerm}
-                </span>
-              </div>
-            )}
-            {alert.flipMinSold != null && (
-              <div>
-                <span style={metaLabelStyle}>Sold: </span>
-                <span style={{ color: "var(--color-secondary)" }}>
-                  ${alert.flipMinSold.toFixed(2)} – $
-                  {alert.flipMaxSold?.toFixed(2)}
-                </span>
-              </div>
-            )}
-            {alert.flipMinListed != null && (
-              <div>
-                <span style={metaLabelStyle}>Listed: </span>
-                <span style={{ color: "var(--color-on-surface)" }}>
-                  ${alert.flipMinListed.toFixed(2)} – $
-                  {alert.flipMaxListed?.toFixed(2)}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
       <div
         className="pt-2"
         style={{ borderTop: "1px solid var(--color-outline-variant)" }}

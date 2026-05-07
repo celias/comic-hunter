@@ -42,10 +42,4 @@ model Alert {
   comicswapHave         String?
   comicswapWant         String?
 
-  // eBay flip fields — nullable, populated async once API key arrives
-  flipMinSold     Float?
-  flipMaxSold     Float?
-  flipMinListed   Float?
-  flipMaxListed   Float?
-  flipSearchTerm  String?
 }

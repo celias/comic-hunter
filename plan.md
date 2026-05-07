@@ -51,7 +51,7 @@ dashboard/           — React + Vite + Tailwind CSS frontend
       FilterBar.jsx  — Min score input, subreddit select, localOnly checkbox
       AlertList.jsx  — Renders AlertRow list, manages expandedId state, passes weights
       AlertRow.jsx   — Collapsed row: ScoreBadge, title, subreddit, timeAgo, Local badge
-      AlertDetail.jsx— Expanded: body, metadata, keywords sorted/emphasized by weight, flip data, Reddit link
+      AlertDetail.jsx— Expanded: body, metadata, keywords sorted/emphasized by weight, Reddit link
       ScoreBadge.jsx — Color-coded score pill (green 10-19, yellow 20-29, red 30+)
       EmptyState.jsx — "No alerts found" message
 ```
@@ -93,11 +93,6 @@ model Alert {
   postedAt        DateTime
   seenAt          DateTime @default(now())
 
-  flipMinSold     Float?
-  flipMaxSold     Float?
-  flipMinListed   Float?
-  flipMaxListed   Float?
-  flipSearchTerm  String?
 }
 ```
 
@@ -164,7 +159,7 @@ React 19 + Vite 6 + Tailwind CSS v4 single-page app. Lives in its own directory 
 - **Filters**: min score (default 10, matching `SCORE_THRESHOLD`), subreddit dropdown, local-only toggle
 - **Score color-coding**: green 10-19, yellow 20-29, red 30+ (matches Discord alert colors)
 - **Keyword weight emphasis**: matched keywords sorted by weight (highest first), color-coded by tier (red 8+, yellow 5-7, gray <5), point values shown inline
-- **Expanded row detail**: click any alert to see body, metadata grid, keyword chips, flip data, Reddit link
+- **Expanded row detail**: click any alert to see body, metadata grid, keyword chips, Reddit link
 - **Connection indicator**: green/red dot in header showing API reachability
 - **Vite dev proxy**: `/api` requests forwarded to `localhost:3001`, no hardcoded URLs
 
@@ -187,23 +182,6 @@ Content keyword weights as `[keyword, points]` tuples. Imported by:
 - `api-server.js` — for the `GET /api/keywords` endpoint
 
 Location keyword weights live in `lib/config.js` (which also holds `GEO_SUBS`, `SCORE_THRESHOLD`, `DISCORD_WEBHOOK_URL`).
-
----
-
-## eBay Flip Value
-
-Designed, not yet built. Blocked on eBay developer API key.
-
-- Only fires on geo-local posts
-- Comic title extraction: regex first, Claude API as fallback
-- Pricing sources: Browse API (active listings) + Finding API (sold listings)
-- Discord embed addition when populated:
-  ```
-  Flip Value: $40-$65 sold, $55-$80 listed
-  Searched: "Amazing Spider-Man 300 CGC"
-  ```
-- Schema fields already present on `Alert`: `flipMinSold`, `flipMaxSold`, `flipMinListed`, `flipMaxListed`, `flipSearchTerm`
-- Dashboard already renders flip data when these fields are populated
 
 ---
 
@@ -258,7 +236,6 @@ model Alert {
 - [ ] `User` / `UserSettings` / `UserSeenAlert` schema + migration
 - [ ] Auth — AWS Cognito integration (frontend + API middleware)
 - [ ] Seen/dismiss feature in dashboard (requires auth)
-- [ ] eBay flip value lookup (once API key arrives)
 - [ ] Deploy — EC2/ECS (backend), S3 + CloudFront (frontend), RDS (Postgres)
 - [ ] `Alert.source` field + `postId` namespacing migration (prerequisite for multi-source)
 - [ ] `fb-marketplace.js` — Playwright scraper for Facebook Marketplace

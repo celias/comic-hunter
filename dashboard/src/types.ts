@@ -23,11 +23,6 @@ export interface SerializedAlert {
   imageHeight: number | null;
   imageFetchedAt: string | null;
   imageConfidence: number | null;
-  flipMinSold: number | null;
-  flipMaxSold: number | null;
-  flipMinListed: number | null;
-  flipMaxListed: number | null;
-  flipSearchTerm: string | null;
 }
 
 /** Filter state used by the FilterBar and useAlerts hook. */
