@@ -15,7 +15,7 @@ React dashboard for monitoring comic alerts collected by the Comic Hunter poller
 The dashboard depends on the API server running on port 3001.
 
 ```bash
-# From the repo root — starts both API server and dashboard
+# From the repo root — starts API server, dashboard, and Reddit poller
 npm run dev:manual
 
 # Or start just the dashboard (requires API server already running)

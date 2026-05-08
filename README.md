@@ -38,8 +38,8 @@ DISCORD_WEBHOOK_URL=your_discord_webhook_url
 **For development (recommended):**
 
 ```bash
-# Single command runs both API server + dashboard in parallel
-npm run dev:all
+# Single command runs API server + dashboard + Reddit poller
+npm run dev:manual
 ```
 
 **Individual processes:**
@@ -53,9 +53,6 @@ npm run server
 
 # Dashboard only (port 5173)
 npm run dashboard
-
-# Alternative parallel method
-npm run dev:manual
 ```
 
 Verify the API is up:

@@ -7,14 +7,12 @@
     "dashboard"
   ],
   "scripts": {
-    "dev": "npx tsx api-server.ts",
     "start": "npx tsx reddit-poller.ts",
     "server": "npx tsx api-server.ts",
     "dashboard": "npm run dev --workspace=comic-hunter-dashboard",
     "dashboard:build": "npm run build --workspace=comic-hunter-dashboard",
-    "dev:all": "turbo run dev --parallel",
     "build": "turbo run build",
-    "dev:manual": "concurrently \"npm run server\" \"npm run dashboard\"",
+    "dev:manual": "concurrently \"npm run server\" \"npm run dashboard\" \"npm run start\"",
     "test:api": "npx tsx test-discord.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

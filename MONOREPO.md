@@ -21,15 +21,15 @@ comic-hunter/                    # Workspace root
 
 ## ⚡ Quick Commands
 
-| Command             | Description                                       |
-| ------------------- | ------------------------------------------------- |
-| `npm install`       | Install all dependencies (both root + workspaces) |
-| `npm run dev:all`   | Run API server + dashboard in parallel            |
-| `npm run build`     | Build production assets (with caching)            |
-| `npm start`         | Reddit poller only                                |
-| `npm run server`    | API server only                                   |
-| `npm run dashboard` | Frontend dev server only                          |
-| `npm run test:api`  | Test Discord webhook                              |
+| Command              | Description                                       |
+| -------------------- | ------------------------------------------------- |
+| `npm install`        | Install all dependencies (both root + workspaces) |
+| `npm run dev:manual` | Run API server + dashboard + poller in parallel   |
+| `npm run build`      | Build production assets (with caching)            |
+| `npm start`          | Reddit poller only                                |
+| `npm run server`     | API server only                                   |
+| `npm run dashboard`  | Frontend dev server only                          |
+| `npm run test:api`   | Test Discord webhook                              |
 
 ## 🚀 Development Workflow
 
@@ -44,7 +44,7 @@ npm run build           # Build dashboard once
 ### Daily development:
 
 ```bash
-npm run dev:all         # Both servers + hot reload
+npm run dev:manual      # API server + dashboard + poller
 # Work on features...
 npm run build          # Rebuild (only changed files)
 ```
@@ -126,7 +126,7 @@ When adding new scrapers (eBay, Facebook):
 ### Development
 
 ```bash
-npm run dev:all        # Local development
+npm run dev:manual     # Local development
 ```
 
 ### Production

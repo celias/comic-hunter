@@ -30,11 +30,8 @@ npm run server
 # Start Reddit poller
 npm run start
 
-# Start both API + dashboard (recommended for local dev)
+# Start all three processes (API server + dashboard + poller)
 npm run dev:manual
-
-# Start everything via Turborepo
-npm run dev:all
 
 # Build dashboard
 npm run dashboard:build
