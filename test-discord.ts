@@ -9,6 +9,7 @@
  */
 
 import { config } from "./lib/config.ts";
+import { log } from "./lib/logger.ts";
 
 async function sendTestEmbed(
   label: string,
@@ -52,15 +53,15 @@ async function sendTestEmbed(
   });
 
   if (res.ok) {
-    console.log(`✅  "${label}" sent successfully`);
+    log("info", `✅  "${label}" sent successfully`);
   } else {
-    console.error(`❌  "${label}" failed — HTTP ${res.status}`);
+    log("error", `❌  "${label}" failed — HTTP ${res.status}`);
     const body = await res.text();
-    console.error("    Discord said:", body);
+    log("error", `    Discord said: ${body}`);
   }
 }
 
-console.log("Sending test embeds to Discord…\n");
+log("info", "Sending test embeds to Discord…");
 
 // Send both variants so you can see how each label looks in Discord
 await sendTestEmbed("Local post (📍)", true, ["cherry hill", "856"]);
@@ -70,4 +71,4 @@ await new Promise((r) => setTimeout(r, 1500));
 
 await sendTestEmbed("Unknown location (🌐)", false, []);
 
-console.log("\nDone. Check your Discord channel.");
+log("info", "Done. Check your Discord channel.");

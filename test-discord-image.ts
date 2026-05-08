@@ -1,5 +1,6 @@
 import { prisma } from "./lib/prisma.ts";
 import { config } from "./lib/config.ts";
+import { log } from "./lib/logger.ts";
 
 async function main() {
   const a = await prisma.alert.findFirst({
@@ -7,11 +8,11 @@ async function main() {
     select: { imageUrl: true, title: true },
   });
   if (!a || !a.imageUrl) {
-    console.log("No i.redd.it alert found");
+    log("info", "No i.redd.it alert found");
     await prisma.$disconnect();
     return;
   }
-  console.log("Sending big image test:", a.imageUrl);
+  log("info", `Sending big image test: ${a.imageUrl}`);
   const res = await fetch(config.DISCORD_WEBHOOK_URL!, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -30,7 +31,7 @@ async function main() {
       ],
     }),
   });
-  console.log("Discord:", res.status, res.statusText);
+  log("info", `Discord: ${res.status} ${res.statusText}`);
   await prisma.$disconnect();
 }
 main();
