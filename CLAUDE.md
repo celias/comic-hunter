@@ -65,6 +65,11 @@ npx prisma migrate dev
 - Prisma is the only DB access layer — no raw SQL
 - Console output goes through `log()` from `lib/logger.ts` in backend files
 
+## Prisma Workflow
+
+- After any edit to `prisma/schema.prisma`, always run `npx prisma generate` before starting the server — the generated client in `generated/prisma/` will be stale otherwise, causing runtime `(not available)` column errors.
+- Do not use `npx prisma db pull` for diagnostics — it overwrites comments and field ordering in the schema file. Use `npx prisma migrate status` instead.
+
 ## CI & Formatting
 
 - CI runs `prettier --check .` on all files — lint-staged must cover every file type committed to the repo.

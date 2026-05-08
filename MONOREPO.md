@@ -13,8 +13,8 @@ comic-hunter/                    # Workspace root
 │   ├── package.json            # Dashboard-specific dependencies
 │   ├── src/                    # React components
 │   └── dist/                   # Built assets
-├── reddit-poller.js             # Backend services
-├── api-server.js
+├── reddit-poller.ts             # Backend services
+├── api-server.ts
 ├── lib/                        # Shared utilities
 └── generated/                  # Prisma client
 ```
@@ -112,7 +112,7 @@ When adding new scrapers (eBay, Facebook):
 
 ```json
 // package.json - add script
-"ebay-scraper": "npx tsx ebay-scraper.js"
+"ebay-scraper": "npx tsx ebay-scraper.ts"
 
 // turbo.json - add task
 "ebay-scraper": {

@@ -8,29 +8,29 @@ A Node.js app that polls Reddit for free/cheap comics and collectibles, scores p
 
 ## Stack
 
-| Layer           | Tech                                |
-| --------------- | ----------------------------------- |
-| Runtime         | Node v20.20.1 (nvm, set as default) |
-| Runner          | `tsx` — `npx tsx <file>`            |
-| Database (dev)  | Neon (cloud Postgres)               |
-| Database (prod) | AWS RDS                             |
-| ORM             | Prisma v7 + `@prisma/adapter-pg`    |
-| Frontend        | React 19 + Vite 6 + Tailwind v4     |
-| Backend         | Express.js → EC2/ECS                |
-| Auth            | AWS Cognito                         |
-| Real-time       | REST polling (5s)                   |
+| Layer           | Tech                             |
+| --------------- | -------------------------------- |
+| Runtime         | Node 24                          |
+| Runner          | `tsx` — `npx tsx <file>`         |
+| Database (dev)  | Neon (cloud Postgres)            |
+| Database (prod) | AWS RDS                          |
+| ORM             | Prisma v7 + `@prisma/adapter-pg` |
+| Frontend        | React 19 + Vite 6 + Tailwind v4  |
+| Backend         | Express.js → EC2/ECS             |
+| Auth            | AWS Cognito                      |
+| Real-time       | REST polling (5s)                |
 
 ---
 
 ## File Structure
 
 ```
-reddit-poller.js     — Reddit poller, scorer, Discord alerter, Prisma writes
-api-server.js        — Express API (port 3001), serves alerts + keywords to the dashboard
-lib/config.js        — GEO_SUBS, LOCATION_KEYWORDS (40+ weighted), SCORE_THRESHOLD, DISCORD_WEBHOOK_URL
-lib/prisma.js        — Shared Prisma client singleton (imported by poller + server)
-lib/keywords.js      — Shared content keyword weights (imported by poller + server)
-test-discord.js      — Webhook smoke test utility
+reddit-poller.ts     — Reddit poller, scorer, Discord alerter, Prisma writes
+api-server.ts        — Express API (port 3001), serves alerts + keywords to the dashboard
+lib/config.ts        — GEO_SUBS, LOCATION_KEYWORDS (40+ weighted), SCORE_THRESHOLD, DISCORD_WEBHOOK_URL
+lib/prisma.ts        — Shared Prisma client singleton (imported by poller + server)
+lib/keywords.ts      — Shared content keyword weights (imported by poller + server)
+test-discord.ts      — Webhook smoke test utility
 prisma/schema.prisma — Alert model (pushed to Neon); User/UserSettings/UserSeenAlert planned
 prisma.config.ts     — Prisma v7 config, reads DATABASE_URL from .env
 generated/prisma/    — Prisma generated client (do not edit)
@@ -40,36 +40,36 @@ dashboard/           — React + Vite + Tailwind CSS frontend
   vite.config.js     — Vite 6, React plugin, Tailwind v4 plugin, dev proxy /api → localhost:3001
   index.html         — Dark-themed shell
   src/
-    main.jsx         — React entry point
-    App.jsx          — Filter state, keyword weight fetch, layout orchestration
+    main.tsx         — React entry point
+    App.tsx          — Filter state, keyword weight fetch, layout orchestration
     index.css        — Tailwind import (@import "tailwindcss")
-    api.js           — Fetch wrapper: fetchAlerts, fetchAlert, checkHealth, fetchKeywords
+    api.ts           — Fetch wrapper: fetchAlerts, fetchAlert, checkHealth, fetchKeywords
     hooks/
-      useAlerts.js   — Polling hook: initial load → 5s incremental poll via `since` param
+      useAlerts.ts   — Polling hook: initial load → 5s incremental poll via `since` param
     components/
-      Header.jsx     — Title + green/red connection dot + alert count
-      FilterBar.jsx  — Min score input, subreddit select, localOnly checkbox
-      AlertList.jsx  — Renders AlertRow list, manages expandedId state, passes weights
-      AlertRow.jsx   — Collapsed row: ScoreBadge, title, subreddit, timeAgo, Local badge
-      AlertDetail.jsx— Expanded: body, metadata, keywords sorted/emphasized by weight, Reddit link
-      ScoreBadge.jsx — Color-coded score pill (green 10-19, yellow 20-29, red 30+)
-      EmptyState.jsx — "No alerts found" message
+      Header.tsx     — Title + green/red connection dot + alert count
+      FilterBar.tsx  — Min score input, subreddit select, localOnly checkbox
+      AlertList.tsx  — Renders AlertRow list, manages expandedId state, passes weights
+      AlertRow.tsx   — Collapsed row: ScoreBadge, title, subreddit, timeAgo, Local badge
+      AlertDetail.tsx— Expanded: body, metadata, keywords sorted/emphasized by weight, Reddit link
+      ScoreBadge.tsx — Color-coded score pill (green 10-19, yellow 20-29, red 30+)
+      EmptyState.tsx — "No alerts found" message
 ```
 
 ---
 
 ## Prisma Client — v7 instantiation (must follow this pattern)
 
-```js
-import { PrismaClient } from "./generated/prisma/client.js";
+```ts
+import { PrismaClient } from "../generated/prisma/client.ts";
 import { PrismaPg } from "@prisma/adapter-pg";
 
-const prisma = new PrismaClient({
+export const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
 });
 ```
 
-Shared via `lib/prisma.js` — both `reddit-poller.js` and `api-server.js` import from there.
+Shared via `lib/prisma.ts` — both `reddit-poller.ts` and `api-server.ts` import from there.
 
 ---
 
@@ -114,7 +114,7 @@ model UserSeenAlert {
 
 ---
 
-## Express API — `api-server.js`
+## Express API — `api-server.ts`
 
 Runs as a separate process from the poller on port 3001 (or `PORT` env var).
 
@@ -174,14 +174,14 @@ React 19 + Vite 6 + Tailwind CSS v4 single-page app. Lives in its own directory 
 
 ## Shared Modules
 
-### `lib/keywords.js`
+### `lib/keywords.ts`
 
 Content keyword weights as `[keyword, points]` tuples. Imported by:
 
-- `reddit-poller.js` — for scoring posts
-- `api-server.js` — for the `GET /api/keywords` endpoint
+- `reddit-poller.ts` — for scoring posts
+- `api-server.ts` — for the `GET /api/keywords` endpoint
 
-Location keyword weights live in `lib/config.js` (which also holds `GEO_SUBS`, `SCORE_THRESHOLD`, `DISCORD_WEBHOOK_URL`).
+Location keyword weights live in `lib/config.ts` (which also holds `GEO_SUBS`, `SCORE_THRESHOLD`, `DISCORD_WEBHOOK_URL`).
 
 ---
 
@@ -193,7 +193,7 @@ Location keyword weights live in `lib/config.js` (which also holds `GEO_SUBS`, `
 
 ## Planned Sources
 
-### Facebook Marketplace — `fb-marketplace.js`
+### Facebook Marketplace — `fb-marketplace.ts`
 
 - No public API — requires a **Playwright** scraper running a logged-in Facebook session
 - Geo-targeted by default (FB Marketplace is always location-filtered)
@@ -201,7 +201,7 @@ Location keyword weights live in `lib/config.js` (which also holds `GEO_SUBS`, `
 - Run on a separate poll interval from Reddit (less frequent to avoid account bans)
 - **Schema impact:** `Alert` needs a `source` field (`reddit` | `facebook_marketplace` | `buy_nothing`) and the `postId` uniqueness constraint will need namespacing (e.g. `fb:{listingId}`) to avoid collisions across sources
 
-### Buy Nothing — `buy-nothing.js`
+### Buy Nothing — `buy-nothing.ts`
 
 - No public API
 - Two flavors of Buy Nothing groups exist:
@@ -227,19 +227,19 @@ model Alert {
 ## Build Order
 
 - [x] Prisma schema + push to Neon
-- [x] `reddit-poller.js` → Postgres via Prisma — confirmed working
-- [x] `lib/prisma.js` — shared client singleton
-- [x] `lib/keywords.js` — shared content keyword weights
-- [x] `lib/config.js` — tracked app config (location keywords, scoring, geo subs)
-- [x] `api-server.js` — Express API (`/api/alerts`, `/api/alerts/:id`, `/api/health`, `/api/keywords`)
+- [x] `reddit-poller.ts` → Postgres via Prisma — confirmed working
+- [x] `lib/prisma.ts` — shared client singleton
+- [x] `lib/keywords.ts` — shared content keyword weights
+- [x] `lib/config.ts` — tracked app config (location keywords, scoring, geo subs)
+- [x] `api-server.ts` — Express API (`/api/alerts`, `/api/alerts/:id`, `/api/health`, `/api/keywords`)
 - [x] React dashboard — live feed, filters, keyword weight emphasis
 - [ ] `User` / `UserSettings` / `UserSeenAlert` schema + migration
 - [ ] Auth — AWS Cognito integration (frontend + API middleware)
 - [ ] Seen/dismiss feature in dashboard (requires auth)
 - [ ] Deploy — EC2/ECS (backend), S3 + CloudFront (frontend), RDS (Postgres)
 - [ ] `Alert.source` field + `postId` namespacing migration (prerequisite for multi-source)
-- [ ] `fb-marketplace.js` — Playwright scraper for Facebook Marketplace
-- [ ] `buy-nothing.js` — Facebook Buy Nothing group scraper (same session as Marketplace)
+- [ ] `fb-marketplace.ts` — Playwright scraper for Facebook Marketplace
+- [ ] `buy-nothing.ts` — Facebook Buy Nothing group scraper (same session as Marketplace)
 
 ---
 
@@ -284,7 +284,7 @@ This project uses **npm workspaces** + **Turborepo** for optimal dependency mana
 
 ## Notes
 
-- Node engine warnings from Prisma 7.5 (`^22.12` required) — resolve by running with nvm Node v20.20.1 as set
+- Node engine warnings from Prisma 7.5 (`^22.12` required) — resolved by running Node 24 (matches CI)
 - Dashboard uses Vite 6 (not 8) for Node v20 compatibility
 - The poller saves ALL posts to the database regardless of score; the dashboard defaults minScore to 10 to filter noise
 - Turborepo provides build caching and task orchestration for efficient development

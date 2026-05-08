@@ -95,7 +95,7 @@ The Express server exposes three endpoints:
 
 ---
 
-Edit `SCORE_THRESHOLD` in `lib/config.js`:
+Edit `SCORE_THRESHOLD` in `lib/config.ts`:
 
 | Threshold | What you get            |
 | --------- | ----------------------- |
@@ -104,13 +104,13 @@ Edit `SCORE_THRESHOLD` in `lib/config.js`:
 | `15`      | Only strong matches     |
 | `20+`     | Quiet — only clear wins |
 
-To add content keywords, edit the `KEYWORDS` array in `lib/keywords.js`:
+To add content keywords, edit the `KEYWORDS` array in `lib/keywords.ts`:
 
 ```js
 ["your keyword", pointValue],
 ```
 
-To add location keywords (South/Central NJ area), edit `LOCATION_KEYWORDS` in `lib/config.js`.
+To add location keywords (South/Central NJ area), edit `LOCATION_KEYWORDS` in `lib/config.ts`.
 
 ---
 
@@ -132,8 +132,8 @@ npm run server
 
 ```bash
 npm install -g pm2
-pm2 start reddit-poller.js --name comic-hunter-poller
-pm2 start api-server.js --name comic-hunter-api
+pm2 start reddit-poller.ts --name comic-hunter-poller
+pm2 start api-server.ts --name comic-hunter-api
 pm2 save
 pm2 startup
 ```
