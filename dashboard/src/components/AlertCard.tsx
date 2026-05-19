@@ -33,12 +33,14 @@ export default function AlertCard({ alert, onSelect }: AlertCardProps) {
         position: "relative",
         aspectRatio: "2 / 3",
         background: "var(--color-surface-container)",
-        border: `1px solid ${hovered ? "var(--color-primary)" : "rgba(255,45,120,0.25)"}`,
+        border: `1px solid ${hovered ? "var(--color-primary)" : "color-mix(in srgb, var(--color-primary) 25%, transparent)"}`,
         borderRadius: "4px",
         overflow: "visible",
         cursor: "pointer",
         transition: "border-color 0.15s ease, box-shadow 0.15s ease",
-        boxShadow: hovered ? "0 0 18px rgba(255,45,120,0.25)" : "none",
+        boxShadow: hovered
+          ? "0 0 18px color-mix(in srgb, var(--color-primary) 25%, transparent)"
+          : "none",
         zIndex: hovered ? 10 : 1,
       }}
     >
@@ -145,12 +147,13 @@ export default function AlertCard({ alert, onSelect }: AlertCardProps) {
             left: "105%",
             minWidth: "180px",
             background: "var(--color-surface-container-highest)",
-            border: "1px solid rgba(255,45,120,0.4)",
+            border:
+              "1px solid color-mix(in srgb, var(--color-primary) 40%, transparent)",
             borderRadius: "6px",
             padding: "0.75rem",
             zIndex: 20,
             boxShadow:
-              "0 4px 24px rgba(0,0,0,0.6), 0 0 16px rgba(255,45,120,0.1)",
+              "0 4px 24px rgba(0,0,0,0.6), 0 0 16px color-mix(in srgb, var(--color-primary) 10%, transparent)",
             pointerEvents: "none",
           }}
         >
@@ -165,7 +168,7 @@ export default function AlertCard({ alert, onSelect }: AlertCardProps) {
           >
             <span
               style={{
-                color: "#ffe04a",
+                color: "var(--color-score-mid)",
                 fontSize: "0.65rem",
                 letterSpacing: "1px",
               }}

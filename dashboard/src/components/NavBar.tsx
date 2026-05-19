@@ -24,22 +24,30 @@ function ComicHunterLogo() {
           height: 36,
           borderRadius: "6px",
           background: "var(--color-primary-container)",
-          border: "1px solid rgba(255,45,120,0.5)",
+          border:
+            "1px solid color-mix(in srgb, var(--color-primary) 50%, transparent)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          boxShadow: "0 0 12px rgba(255,45,120,0.2)",
+          boxShadow:
+            "0 0 12px color-mix(in srgb, var(--color-primary) 20%, transparent)",
           flexShrink: 0,
         }}
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
           <path
             d="M10 2L3 6v5c0 4 3.5 7 7 8 3.5-1 7-4 7-8V6L10 2z"
-            fill="rgba(255,45,120,0.3)"
-            stroke="#ff2d78"
+            fill="color-mix(in srgb, var(--color-primary) 30%, transparent)"
+            stroke="var(--color-primary)"
             strokeWidth="1.2"
           />
-          <circle cx="10" cy="10" r="3" fill="#ff2d78" opacity="0.8" />
+          <circle
+            cx="10"
+            cy="10"
+            r="3"
+            fill="var(--color-primary)"
+            opacity="0.8"
+          />
         </svg>
       </div>
       <span
@@ -89,7 +97,8 @@ export default function NavBar({
     <nav
       style={{
         background: "var(--color-surface)",
-        borderBottom: "1px solid rgba(255,45,120,0.2)",
+        borderBottom:
+          "1px solid color-mix(in srgb, var(--color-primary) 20%, transparent)",
         position: "sticky",
         top: 0,
         zIndex: 40,
@@ -279,7 +288,8 @@ export default function NavBar({
               fontSize: "0.7rem",
               background: "var(--color-primary-container)",
               color: "var(--color-primary)",
-              border: "1px solid rgba(255,45,120,0.4)",
+              border:
+                "1px solid color-mix(in srgb, var(--color-primary) 40%, transparent)",
               borderRadius: "4px",
               padding: "0.2rem 0.5rem",
             }}

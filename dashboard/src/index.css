@@ -12,6 +12,11 @@
   --color-on-surface-muted: var(--color-on-surface-muted);
   --color-outline: var(--color-outline);
   --color-outline-variant: var(--color-outline-variant);
+  --color-score-high: var(--color-score-high);
+  --color-score-mid: var(--color-score-mid);
+  --color-score-low: var(--color-score-low);
+  --color-error: var(--color-error);
+  --color-error-text: var(--color-error-text);
 }
 
 /* ── Dark mode (default) ─────────────────────────────── */
@@ -30,6 +35,12 @@
 
   --color-outline:                   #48433c;
   --color-outline-variant:           #2e2b26;
+
+  --color-score-high:                #f59e0b;
+  --color-score-mid:                 #facc15;
+  --color-score-low:                 #86efac;
+  --color-error:                     #ef4444;
+  --color-error-text:                #fca5a5;
 }
 
 /* ── Light mode ──────────────────────────────────────── */
@@ -49,6 +60,12 @@
 
     --color-outline:                   #b0a898;
     --color-outline-variant:           #d4cfc8;
+
+    --color-score-high:                #92400e;
+    --color-score-mid:                 #713f12;
+    --color-score-low:                 #166534;
+    --color-error:                     #dc2626;
+    --color-error-text:                #dc2626;
   }
 }
 

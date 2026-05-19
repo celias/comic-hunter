@@ -8,19 +8,23 @@ function formatDate(dateStr: string): string {
 function chipStyle(weight: number): React.CSSProperties {
   if (weight >= 8)
     return {
-      background: "rgba(255,45,120,0.15)",
-      color: "#ff2d78",
-      borderColor: "rgba(255,45,120,0.5)",
+      background:
+        "color-mix(in srgb, var(--color-score-high) 15%, transparent)",
+      color: "var(--color-score-high)",
+      borderColor:
+        "color-mix(in srgb, var(--color-score-high) 50%, transparent)",
       fontWeight: 600,
     };
   if (weight >= 5)
     return {
-      background: "rgba(255,224,74,0.12)",
-      color: "#ffe04a",
-      borderColor: "rgba(255,224,74,0.4)",
+      background: "color-mix(in srgb, var(--color-score-mid) 12%, transparent)",
+      color: "var(--color-score-mid)",
+      borderColor:
+        "color-mix(in srgb, var(--color-score-mid) 40%, transparent)",
     };
   return {
-    background: "rgba(90,80,104,0.15)",
+    background:
+      "color-mix(in srgb, var(--color-on-surface-muted) 15%, transparent)",
     color: "var(--color-on-surface-muted)",
     borderColor: "var(--color-outline)",
   };

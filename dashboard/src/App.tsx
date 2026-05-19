@@ -81,9 +81,10 @@ export default function App() {
             <div
               className="border px-4 py-3 rounded mt-2"
               style={{
-                background: "rgba(255,68,68,0.1)",
-                borderColor: "#ff4444",
-                color: "#ffa0a0",
+                background:
+                  "color-mix(in srgb, var(--color-error) 10%, transparent)",
+                borderColor: "var(--color-error)",
+                color: "var(--color-error-text)",
               }}
             >
               {error}
@@ -137,9 +138,11 @@ export default function App() {
             <div
               style={{
                 background: "var(--color-surface-container)",
-                border: "1px solid rgba(255,45,120,0.4)",
+                border:
+                  "1px solid color-mix(in srgb, var(--color-primary) 40%, transparent)",
                 borderRadius: "6px",
-                boxShadow: "0 0 48px rgba(255,45,120,0.15)",
+                boxShadow:
+                  "0 0 48px color-mix(in srgb, var(--color-primary) 15%, transparent)",
                 maxWidth: "640px",
                 width: "100%",
                 maxHeight: "90vh",
@@ -203,9 +206,10 @@ export default function App() {
         <div
           className="border px-4 py-3 rounded mb-4"
           style={{
-            background: "rgba(255,68,68,0.1)",
-            borderColor: "#ff4444",
-            color: "#ffa0a0",
+            background:
+              "color-mix(in srgb, var(--color-error) 10%, transparent)",
+            borderColor: "var(--color-error)",
+            color: "var(--color-error-text)",
           }}
         >
           {error}
