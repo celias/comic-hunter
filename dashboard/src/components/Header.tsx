@@ -15,7 +15,7 @@ export default function Header({
     <header className="flex items-center justify-between mb-6">
       <div className="flex items-center gap-3">
         <h1
-          className="text-2xl font-bold tracking-tight glow-pink"
+          className="text-2xl font-bold tracking-tight"
           style={{
             fontFamily: "Sora, sans-serif",
             color: "var(--color-primary)",
@@ -26,7 +26,7 @@ export default function Header({
         <span
           className="inline-block w-2.5 h-2.5 rounded-full transition-colors"
           style={{
-            background: connected ? "var(--color-secondary)" : "#ff4444",
+            background: connected ? "var(--color-primary)" : "#b91c1c",
           }}
           title={connected ? "Connected" : "Disconnected"}
         />

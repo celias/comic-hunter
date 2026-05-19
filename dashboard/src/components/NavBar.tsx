@@ -293,11 +293,8 @@ export default function NavBar({
               width: 8,
               height: 8,
               borderRadius: "50%",
-              background: connected ? "var(--color-secondary)" : "#ff4444",
+              background: connected ? "var(--color-primary)" : "#b91c1c",
               display: "inline-block",
-              boxShadow: connected
-                ? "0 0 6px var(--color-secondary)"
-                : "0 0 6px #ff4444",
             }}
             title={connected ? "Connected" : "Disconnected"}
           />

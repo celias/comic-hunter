@@ -110,9 +110,9 @@ export default function AlertRow({
             className="text-xs px-2 py-0.5 shrink-0"
             style={{
               fontFamily: "Space Grotesk, sans-serif",
-              background: "var(--color-secondary-container)",
-              color: "var(--color-secondary)",
-              border: "1px solid rgba(0, 255, 204, 0.4)",
+              background: "var(--color-primary-container)",
+              color: "var(--color-primary)",
+              border: "1px solid var(--color-outline)",
               borderRadius: "4px",
             }}
           >

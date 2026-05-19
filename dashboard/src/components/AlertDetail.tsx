@@ -182,15 +182,8 @@ export default function AlertDetail({ alert, weights }: AlertDetailProps) {
           rel="noopener noreferrer"
           className="text-xs underline transition-all"
           style={{
-            color: "var(--color-secondary)",
+            color: "var(--color-primary)",
             fontFamily: "Space Grotesk, sans-serif",
-          }}
-          onMouseEnter={(e) => {
-            (e.target as HTMLElement).style.textShadow =
-              "0 0 8px var(--color-secondary)";
-          }}
-          onMouseLeave={(e) => {
-            (e.target as HTMLElement).style.textShadow = "none";
           }}
         >
           View on Reddit →

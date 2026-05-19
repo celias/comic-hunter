@@ -176,7 +176,7 @@ export default function AlertCard({ alert, onSelect }: AlertCardProps) {
               style={{
                 fontFamily: "Space Grotesk, sans-serif",
                 fontSize: "0.7rem",
-                color: "var(--color-tertiary)",
+                color: "var(--color-primary)",
                 fontWeight: 600,
               }}
             >
@@ -207,7 +207,7 @@ export default function AlertCard({ alert, onSelect }: AlertCardProps) {
             style={{
               fontFamily: "Space Grotesk, sans-serif",
               fontSize: "0.65rem",
-              color: "var(--color-secondary)",
+              color: "var(--color-on-surface-muted)",
               marginBottom: "0.35rem",
             }}
           >
